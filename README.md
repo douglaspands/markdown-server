@@ -158,4 +158,4 @@ make build-all
 
 ## 📄 Licença
 
-Distribuído sob a licença MIT. Consulte `LICENSE` para mais detalhes.
+Distribuído sob a licença MIT. Consulte [LICENSE](LICENSE) para mais detalhes.
