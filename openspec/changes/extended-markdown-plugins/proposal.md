@@ -1,8 +1,8 @@
 ## Why
 
-O `md_server` atualmente oferece suporte básico ao GitHub Flavored Markdown (tabelas, task lists, strikethrough, autolinks) e diagramas Mermaid. No entanto, documentações técnicas modernas, repositórios do GitHub e bases de conhecimento ricas utilizam extensivamente recursos adicionais como **GitHub Alerts / Callouts** (`[!NOTE]`, `[!TIP]`, `[!WARNING]`, `[!IMPORTANT]`, `[!CAUTION]`), **Notas de Rodapé** (*Footnotes*), **Fórmulas Matemáticas / LaTeX**, **Listas de Definição**, **Tipografia Inteligente**, **Emoji Shortcodes** e **Botão de Cópia em Blocos de Código**.
+O `md_server` atualmente oferece suporte básico ao GitHub Flavored Markdown (tabelas, task lists, strikethrough, autolinks) e diagramas Mermaid. No entanto, documentações técnicas modernas, repositórios do GitHub e bases de conhecimento ricas utilizam extensivamente recursos adicionais como **GitHub Alerts / Callouts** (`[!NOTE]`, `[!TIP]`, `[!WARNING]`, `[!IMPORTANT]`, `[!CAUTION]`), **Notas de Rodapé** (*Footnotes*), **Fórmulas Matemáticas / LaTeX**, **Listas de Definição**, **Tipografia Inteligente**, **Emoji Shortcodes**, **Botão de Cópia em Blocos de Código** e **Exploração Interativa de Diagramas com Zoom e Pan**.
 
-Além disso, em ambientes corporativos e redes restritas, políticas de segurança exigem que servidores locais **não fiquem expostos na rede local (LAN)** por padrão. O comportamento seguro deve ser escutar estritamente em loopback local (`127.0.0.1`) e ocultar o botão de QR Code, permitindo a exposição em rede (`0.0.0.0`) e ativação do QR Code exclusivamente sob demanda via argumento explícito de linha de comando (`--lan` / `-l`).
+Além disso, diagramas complexos de arquitetura e fluxogramas extensos frequentemente ultrapassam a largura padrão da viewport ou contêm detalhes minuciosos que exigem ampliação e navegação fluida por arrasto. Adicionalmente, em ambientes corporativos e redes restritas, políticas de segurança exigem que servidores locais **não fiquem expostos na rede local (LAN)** por padrão, escutando em loopback local (`127.0.0.1`) e ativando a exposição externa e QR Code sob demanda com `--lan` / `-l`.
 
 ## What Changes
 
@@ -13,8 +13,9 @@ Além disso, em ambientes corporativos e redes restritas, políticas de seguran�
 - **Fórmulas Matemáticas e LaTeX (Math Rendering)**: Suporte a fórmulas matemáticas inline (`$E=mc^2$`) e blocos de equações (`$$ ... $$`) com renderização vetorial ultrarrápida via KaTeX.
 - **Emoji Shortcodes**: Reconhecimento de códigos de emoji populares do GitHub (ex: `:rocket:`, `:white_check_mark:`, `:bulb:`, `:sparkles:`).
 - **Botão de Cópia em Blocos de Código (Code Copy Action)**: Inclusão de botão interativo e discreto de cópia para a área de transferência em todos os blocos de código formatados com feedback visual imediato.
+- **Zoom e Pan Interativo para Diagramas (Mermaid Navigation)**: Controles flutuantes de ampliação (+), redução (-), reset (↺) e navegação por clique e arraste (*drag-and-pan*) intuitivo em todos os diagramas Mermaid gerados, com suporte a roda do mouse (wheel/Ctrl+wheel) e toque móvel.
 - **Controle Seguro de Exposição de Rede Local (`--lan`)**: Inclusão da flag CLI `--lan` (shorthand `-l`, padrão `false`). Por padrão, o servidor escuta em `127.0.0.1` e o botão de QR Code fica oculto; ao passar `--lan`, o servidor escuta em `0.0.0.0`, exibe a URL LAN no console e habilita o botão de QR Code no cabeçalho.
-- **Documentação Visual com Prints de Tela (README.md)**: Atualização do `README.md` com prévias visuais em alta definição e mockups de tela (com dados fictícios ilustrativos) apresentando a interface do Markdown Viewer, suporte a temas (Dark/Light), alertas GitHub, diagramas Mermaid, fórmulas e menu lateral redimensionável.
+- **Documentação Visual com Prints de Tela (README.md)**: Atualização do `README.md` com prévias visuais em alta definição e mockups de tela (com dados fictícios ilustrativos) apresentando a interface do Markdown Viewer, suporte a temas (Dark/Light), alertas GitHub, diagramas Mermaid com controles de zoom, fórmulas e menu lateral redimensionável.
 
 ## Capabilities
 
@@ -22,7 +23,7 @@ Além disso, em ambientes corporativos e redes restritas, políticas de seguran�
 <!-- Nenhuma nova capacidade raiz necessária; expande os requisitos existentes de fundação e renderização -->
 
 ### Modified Capabilities
-- `project-foundation`: Modifica e expande os requisitos de renderização Markdown para incluir GitHub Alerts/Callouts, Notas de Rodapé (Footnotes), Fórmulas Matemáticas KaTeX, Listas de Definição, Tipografia Inteligente, Emojis, Botão de Cópia em blocos de código, flag de controle seguro de exposição de rede local (`--lan`) com ativação condicional do QR Code e prévias visuais no README.
+- `project-foundation`: Modifica e expande os requisitos de renderização Markdown para incluir GitHub Alerts/Callouts, Notas de Rodapé (Footnotes), Fórmulas Matemáticas KaTeX, Listas de Definição, Tipografia Inteligente, Emojis, Botão de Cópia em blocos de código, controles de Zoom e Pan em diagramas Mermaid, flag de controle seguro de exposição de rede local (`--lan`) com ativação condicional do QR Code e prévias visuais no README.
 
 ## Impact
 
@@ -34,7 +35,7 @@ Além disso, em ambientes corporativos e redes restritas, políticas de seguran�
   - `internal/adapters/out/renderer/goldmark.go`: Extensões Goldmark e GitHub Alerts.
 - **Frontend (HTML/CSS/JS)**:
   - `web/templates/base.html`: Renderização condicional do botão de QR Code (`{{if .ShowQRCode}}`).
-  - `web/static/css/style.css`: Estilos de alerts, footnotes, KaTeX e copy button.
-  - `web/static/js/app.js`: Cópia de código, KaTeX e inicialização segura de QR Code.
+  - `web/static/css/style.css`: Estilos de alerts, footnotes, KaTeX, copy button e barra de controles flutuantes de Zoom & Pan para Mermaid.
+  - `web/static/js/app.js`: Cópia de código, KaTeX, gerenciador de Zoom & Pan com arrasto de mouse/touch e inicialização segura de QR Code.
 - **Documentação e Assets (`docs/screenshots/` e `README.md`)**:
-  - Mockups visuais vetoriais em `docs/screenshots/` e atualização do `README.md` documentando a nova flag `--lan`.
+  - Mockups visuais vetoriais em `docs/screenshots/` e atualização do `README.md` documentando a nova flag `--lan` e a navegação em diagramas Mermaid.

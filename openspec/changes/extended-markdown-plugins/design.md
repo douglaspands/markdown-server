@@ -76,6 +76,18 @@ flowchart TD
   - Quando `ExposeLAN == true`: o servidor HTTP vincula o listener a `0.0.0.0:<port>`, detecta o IP da rede local via `DetectLANIP()`, exibe ambas as URLs (Local e LAN) no banner e habilita o botão de QR Code na barra superior da interface.
 - **Justificativa**: Conformidade total com ambientes de trabalho corporativos e restrições de segurança que proíbem portas de desenvolvimento abertas para a rede externa por padrão.
 
+### 8. Navegação Interativa e Zoom/Pan em Diagramas Mermaid
+- **Decisão**: Implementar gerenciador interativo de Pan & Zoom nativo em Vanilla JS no `web/static/js/app.js` e estilização no `web/static/css/style.css`.
+  - Cada container `.mermaid` recebe uma barra de ferramentas flutuante discreta no canto superior direito com ações:
+    - Ampliar (`+` Zoom In).
+    - Reduzir (`-` Zoom Out).
+    - Resetar (`↺` Reset Zoom & Posição).
+  - O diagrama SVG renderizado suporta:
+    - Arrastar (*pan*) com o botão esquerdo do mouse ou touch com cursor interativo (`grab` / `grabbing`).
+    - Zoom proporcional via scroll da roda do mouse (`wheel`) ou botões flutuantes.
+    - Limites seguros de escala (mínimo `0.5x`, máximo `5.0x`) e transição CSS fluida.
+- **Justificativa**: Diagramas extensos de sistemas complexos tornam-se facilmente legíveis e navegáveis diretamente na interface sem quebrar o layout da página.
+
 ## Risks / Trade-offs
 
 - **[Risco] Conflito entre símbolos de dólar (`$`) em textos comuns e fórmulas matemáticas**: Valores monetários normais podem ser interpretados acidentalmente como LaTeX.

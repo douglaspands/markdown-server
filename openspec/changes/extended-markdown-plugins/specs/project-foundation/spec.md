@@ -70,6 +70,31 @@ O sistema SHALL processar arquivos Markdown no diretório raiz fornecido, conver
 
 ---
 
+### Requirement: Renderização de diagramas Mermaid em tempo real
+O sistema SHALL identificar blocos de código com identificador de linguagem `mermaid`, processá-los no parser e renderizá-los dinamicamente como diagramas vetoriais (SVG) estilizados na interface web, integrando-os com a alternância de temas (Dark/Light), fornecendo fallback seguro para sintaxes incorretas e suportando navegação interativa fluida com controles de Zoom (+ / - / ↺) e Pan por arrasto com mouse ou toque.
+
+#### Scenario: Renderização de fluxo ou diagrama Mermaid válido
+- **GIVEN** que um arquivo Markdown contém um bloco de código cercado com ```mermaid (ex: fluxo flowchart TD, diagrama de sequência ou grafo de classes)
+- **WHEN** o usuário carrega a página correspondente no navegador
+- **THEN** o sistema SHALL processar o bloco e exibir o diagrama visual SVG estilizado e interativo em vez do texto bruto.
+
+#### Scenario: Tratamento de erro em diagrama Mermaid com sintaxe inválida
+- **GIVEN** que um arquivo Markdown contém um bloco ```mermaid com erro de digitação ou sintaxe inválida
+- **WHEN** o navegador tenta processar e renderizar o diagrama
+- **THEN** o sistema SHALL capturar o erro, exibir um alerta visual claro no local do diagrama indicando a falha de sintaxe e disponibilizar um botão para inspecionar o código-fonte original.
+
+#### Scenario: Navegação interativa com Zoom e Pan em diagramas Mermaid
+- **GIVEN** que um diagrama Mermaid renderizado está visível na tela
+- **WHEN** o usuário clica nos botões de ampliação (+) ou redução (-) ou utiliza a roda do mouse sobre o diagrama
+- **THEN** o sistema SHALL aplicar escala proporcional suave no diagrama SVG e permitir que o usuário arraste (*pan*) o diagrama livremente com o cursor do mouse em formato de mão (`grab`/`grabbing`) ou gesto de toque.
+
+#### Scenario: Redefinição da visualização do diagrama
+- **GIVEN** que o usuário alterou o nível de zoom ou arrastou a posição de um diagrama Mermaid
+- **WHEN** o usuário clica no botão de reset (↺) na barra de ferramentas flutuante do diagrama
+- **THEN** o sistema SHALL redefinir o zoom para 100% e centralizar novamente o diagrama no container original.
+
+---
+
 ### Requirement: Compartilhamento facilitado e acesso móvel via QR Code
 O sistema SHALL disponibilizar no cabeçalho da interface um botão que abre um modal interativo contendo o **QR Code** gerado com o endereço IP acessível na rede local (LAN), exibindo o botão exclusivamente quando a aplicação for iniciada com o argumento `--lan` ativo.
 
