@@ -50,3 +50,9 @@
 - [x] 9.1 Implementar barra de ferramentas flutuante (+, -, ↺) e estilos CSS para controles de diagramas no `web/static/css/style.css`
 - [x] 9.2 Implementar manipulador de Pan & Zoom com eventos de mouse/touch (`pointerdown`, `pointermove`, `wheel`) e limites de escala em `web/static/js/app.js`
 - [x] 9.3 Integrar o reset e re-aplicação de Zoom/Pan durante alternância de tema no `web/static/js/app.js`
+
+## 10. Stack Tipográfica Otimizada para Markdown, Scripts e Código
+
+- [ ] 10.1 Atualizar variáveis CSS `--font-sans` e `--font-mono` em `web/static/css/style.css` com a hierarquia de fontes de alto padrão da indústria
+- [ ] 10.2 Ajustar estilos de tipografia de cabeçalhos, corpo de texto, tabelas, alertas e blocos de código (`.highlight`, `code`, `pre`, `.mermaid`) para máxima legibilidade e alinhamento visual
+- [ ] 10.3 Atualizar documentação e recursos no `README.md`

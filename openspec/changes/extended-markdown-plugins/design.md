@@ -88,6 +88,16 @@ flowchart TD
     - Limites seguros de escala (mínimo `0.5x`, máximo `5.0x`) e transição CSS fluida.
 - **Justificativa**: Diagramas extensos de sistemas complexos tornam-se facilmente legíveis e navegáveis diretamente na interface sem quebrar o layout da página.
 
+### 9. Stack Tipográfica Otimizada para Markdown, Scripts e Código-fonte
+- **Decisão**: Configurar em `web/static/css/style.css` a hierarquia de fontes de alto padrão da indústria recomendada para documentação técnica:
+  - `--font-sans`: `-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`.
+  - `--font-mono`: `"JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Consolas, "Roboto Mono", "Ubuntu Mono", "Liberation Mono", Menlo, Monaco, monospace`.
+  - Otimizações de renderização:
+    - `-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;` no `body`.
+    - `font-feature-settings: "liga" 1, "calt" 1;` em blocos de código (`.highlight`, `pre`, `code`) para ligaduras nítidas.
+    - Preservação da renderização de diagramas Mermaid (`font-family: inherit`) e fórmulas KaTeX (`KaTeX_Main, Times New Roman, serif`).
+- **Justificativa**: Garante legibilidade editorial de ponta em qualquer sistema operacional (macOS, Windows, Linux) sem overhead de download de fontes pesadas, mantendo o funcionamento 100% offline.
+
 ## Risks / Trade-offs
 
 - **[Risco] Conflito entre símbolos de dólar (`$`) em textos comuns e fórmulas matemáticas**: Valores monetários normais podem ser interpretados acidentalmente como LaTeX.

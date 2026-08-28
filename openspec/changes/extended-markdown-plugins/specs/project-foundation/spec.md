@@ -8,6 +8,11 @@ O sistema SHALL processar arquivos Markdown no diretório raiz fornecido, conver
 - **WHEN** o usuário acessa a raiz `http://localhost:8080/` no navegador
 - **THEN** o sistema SHALL renderizar o conteúdo do `README.md` com tipografia moderna, exibir no cabeçalho a marca "Markdown Viewer" acompanhada do ícone vetorial e carregar o favicon na aba do navegador.
 
+#### Scenario: Tipografia de leitura otimizada para prosa e documentação Markdown
+- **GIVEN** que o usuário está visualizando qualquer documento Markdown renderizado
+- **WHEN** o navegador renderiza o texto, títulos, parágrafos e listas
+- **THEN** o sistema SHALL utilizar a pilha tipográfica sem-serifa moderna recomendada (`-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif`), proporcionando nitidez visual, excelente legibilidade e suporte completo a emojis do sistema.
+
 #### Scenario: Atendimento da rota de Favicon do navegador
 - **GIVEN** que o servidor `md_server` está ativo
 - **WHEN** o navegador requisita `/favicon.ico` ou `/static/img/icon.svg`
@@ -67,6 +72,26 @@ O sistema SHALL processar arquivos Markdown no diretório raiz fornecido, conver
 - **GIVEN** que a aplicação possui interface gráfica minimalista e plugins avançados de renderização
 - **WHEN** o usuário ou desenvolvedor lê o `README.md` no repositório
 - **THEN** o documento SHALL exibir capturas de tela e mockups visuais ilustrativos com dados fictícios apresentando o visualizador em funcionamento, demonstrando o divisor de redimensionamento, os alertas do GitHub, diagramas Mermaid e o modal de QR Code.
+
+---
+
+### Requirement: Destaque de sintaxe de código-fonte colorido (Syntax Highlighting)
+O sistema DEVE aplicar colorização e destaque de sintaxe em blocos de código-fonte formatados com especificadores de linguagem (Go, Python, JavaScript, TypeScript, JSON, YAML, HTML, Shell, SQL, etc.), utilizando a hierarquia de fontes monoespaçadas mais recomendada para desenvolvedores.
+
+#### Scenario: Destaque de código com linguagem reconhecida
+- **GIVEN** que o documento Markdown possui um bloco de código Go cercado por ```go
+- **WHEN** a página é renderizada
+- **THEN** o sistema SHALL colorir palavras-chave, strings, funções e comentários com classes de estilo de alto contraste e legibilidade, respeitando o tema visual selecionado (Dark/Light).
+
+#### Scenario: Fallback para blocos de código genéricos sem linguagem declarada
+- **GIVEN** que o documento Markdown possui um bloco de código cercado por ``` sem identificador de linguagem
+- **WHEN** a página é renderizada
+- **THEN** o sistema SHALL exibir o bloco com fonte monoespaçada, fundo destacado e formatação preservada sem quebras de layout.
+
+#### Scenario: Tipografia monoespaçada otimizada para blocos de código e scripts
+- **GIVEN** que blocos de código, tags `<code>`, scripts ou snippets de terminal são exibidos na interface
+- **WHEN** os elementos são desenhados no navegador
+- **THEN** o sistema SHALL aplicar a pilha tipográfica monoespaçada otimizada (`"JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Consolas, "Roboto Mono", monospace`), garantindo alinhamento de colunas, distinção nítida de caracteres (`0`/`O`, `1`/`l`/`I`) e renderização nítida.
 
 ---
 
