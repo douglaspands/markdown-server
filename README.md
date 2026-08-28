@@ -40,6 +40,7 @@ Construído em **Go 1.22+** com **Clean Architecture (Ports & Adapters)**, gera 
 | 📝 **Notas de Rodapé (Footnotes)** | `Texto[^1]` e `[^1]: Definição` | Links sobrescritos com retorno suave `#fnref:1` e lista inferior |
 | 📖 **Listas de Definição** | `Termo\n: Definição do termo` | Tags semânticas `<dl>`, `<dt>`, `<dd>` estilizadas |
 | 🔤 **Tipografia Inteligente** | `---` $\rightarrow$ `—`, `--` $\rightarrow$ `–`, `...` $\rightarrow$ `…`, aspas curvas | Tipografia editorial moderna e refinada |
+| 🔠 **Stack Tipográfica Recomendada** | System UI (`Segoe UI`, `Noto Sans`) e Dev Mono (`JetBrains Mono`, `Fira Code`, `Consolas`) | Nitidez editorial para leitura e ligaduras perfeitas em scripts/códigos |
 | ↔️ **Menu Lateral Redimensionável** | Barra divisória arrastável (`180px` a `600px`) | Largura personalizada persistida no `localStorage` do navegador |
 | 🔒 **Segurança Local por Padrão** | Escuta padrão estrita em loopback (`127.0.0.1`) | Sem exposição na rede corporativa ou botões desnecessários |
 | 📱 **QR Code Sob Demanda (`--lan`)** | Flag `--lan` habilita escuta `0.0.0.0` e QR Code | Acesso direto de smartphones e tablets na mesma rede Wi-Fi |

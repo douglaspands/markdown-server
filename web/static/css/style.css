@@ -18,8 +18,8 @@
   --table-stripe: #f8fafc;
   --sidebar-width: 270px;
   --header-height: 52px;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Consolas, "Roboto Mono", "Ubuntu Mono", "Liberation Mono", Menlo, Monaco, monospace;
 }
 
 [data-theme="dark"] {
@@ -55,6 +55,7 @@ html, body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Header */
@@ -390,10 +391,12 @@ body.resizing .app-sidebar {
 .markdown-body code {
   font-family: var(--font-mono);
   font-size: 0.86em;
+  font-feature-settings: "liga" 1, "calt" 1;
   background-color: var(--bg-secondary);
-  padding: 0.15rem 0.35rem;
+  padding: 0.15rem 0.38rem;
   border-radius: 4px;
   border: 1px solid var(--border-color);
+  letter-spacing: -0.01em;
 }
 
 .markdown-body pre {
@@ -401,7 +404,10 @@ body.resizing .app-sidebar {
   border-radius: 8px;
   overflow-x: auto;
   background-color: var(--code-bg);
-  padding: 1rem;
+  padding: 1.1rem 1.25rem;
+  tab-size: 2;
+  -moz-tab-size: 2;
+  line-height: 1.55;
 }
 
 .markdown-body pre code {
@@ -410,6 +416,9 @@ body.resizing .app-sidebar {
   border: none;
   color: var(--code-text);
   font-size: 0.88rem;
+  font-family: var(--font-mono);
+  font-feature-settings: "liga" 1, "calt" 1;
+  letter-spacing: 0;
 }
 
 .highlight {
@@ -418,11 +427,17 @@ body.resizing .app-sidebar {
   border-radius: 8px;
   overflow-x: auto;
   background-color: var(--code-bg);
+  tab-size: 2;
+  -moz-tab-size: 2;
 }
 
 .highlight pre {
   margin-bottom: 0;
   border: none;
+  padding: 1.1rem 1.25rem;
+  line-height: 1.55;
+  font-family: var(--font-mono);
+  font-feature-settings: "liga" 1, "calt" 1;
 }
 
 /* Botão de Cópia em Blocos de Código */

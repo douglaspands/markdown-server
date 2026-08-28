@@ -53,6 +53,6 @@
 
 ## 10. Stack Tipográfica Otimizada para Markdown, Scripts e Código
 
-- [ ] 10.1 Atualizar variáveis CSS `--font-sans` e `--font-mono` em `web/static/css/style.css` com a hierarquia de fontes de alto padrão da indústria
-- [ ] 10.2 Ajustar estilos de tipografia de cabeçalhos, corpo de texto, tabelas, alertas e blocos de código (`.highlight`, `code`, `pre`, `.mermaid`) para máxima legibilidade e alinhamento visual
-- [ ] 10.3 Atualizar documentação e recursos no `README.md`
+- [x] 10.1 Atualizar variáveis CSS `--font-sans` e `--font-mono` em `web/static/css/style.css` com a hierarquia de fontes de alto padrão da indústria
+- [x] 10.2 Ajustar estilos de tipografia de cabeçalhos, corpo de texto, tabelas, alertas e blocos de código (`.highlight`, `code`, `pre`, `.mermaid`) para máxima legibilidade e alinhamento visual
+- [x] 10.3 Atualizar documentação e recursos no `README.md`
