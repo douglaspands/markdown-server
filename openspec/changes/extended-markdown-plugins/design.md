@@ -70,6 +70,12 @@ flowchart TD
 - **Decisão**: Criar capturas/mockups vetoriais SVG e imagens ilustrativas em `docs/screenshots/` (ex: `preview-light.png`/`.svg`, `preview-dark.png`/`.svg`, `alerts-preview.png`, `mermaid-preview.png`, `qrcode-preview.png`) com dados e textos fictícios que demonstrem claramente o visual moderno do Markdown Viewer, incorporando-os no topo do `README.md`.
 - **Justificativa**: Enriquece a apresentação visual do repositório, transmitindo profissionalismo imediato para novos usuários e contribuidores sem expor dados reais sensíveis.
 
+### 7. Flag CLI `--lan` e Segurança de Exposição de Rede
+- **Decisão**: Implementar a flag `--lan` / `-l` (tipo `bool`, padrão `false`) no CLI Cobra e na entidade `domain.Config`.
+  - Quando `ExposeLAN == false` (comportamento padrão seguro): o servidor HTTP vincula o listener exclusivamente a `127.0.0.1:<port>`, o banner do terminal exibe apenas `http://localhost:<port>` e a flag `ShowQRCode` é definida como `false` em `PageData`, ocultando o botão e o modal de QR Code no template `base.html`.
+  - Quando `ExposeLAN == true`: o servidor HTTP vincula o listener a `0.0.0.0:<port>`, detecta o IP da rede local via `DetectLANIP()`, exibe ambas as URLs (Local e LAN) no banner e habilita o botão de QR Code na barra superior da interface.
+- **Justificativa**: Conformidade total com ambientes de trabalho corporativos e restrições de segurança que proíbem portas de desenvolvimento abertas para a rede externa por padrão.
+
 ## Risks / Trade-offs
 
 - **[Risco] Conflito entre símbolos de dólar (`$`) em textos comuns e fórmulas matemáticas**: Valores monetários normais podem ser interpretados acidentalmente como LaTeX.

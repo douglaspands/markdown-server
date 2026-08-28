@@ -35,3 +35,12 @@
 
 - [x] 7.1 Registrar commits semânticos atômicos seguindo o padrão Conventional Commits (`feat(renderer):`, `style(ui):`, `docs(readme):`, `test(renderer):`)
 - [x] 7.2 Preparar para solicitação de autorização do usuário antes de realizar o Squash Merge na branch `main`
+
+## 8. Flag de Segurança CLI `--lan` e QR Code Condicional
+
+- [ ] 8.1 Adicionar a flag `--lan` / `-l` (padrão: `false`) no CLI Cobra (`internal/adapters/in/cli/root.go`) e na entidade de configuração (`internal/core/domain/config.go`)
+- [ ] 8.2 Atualizar o adaptador de servidor HTTP (`internal/adapters/in/http/server.go`) para escuta padrão em `127.0.0.1:<port>` (modo seguro) e `0.0.0.0:<port>` apenas quando `ExposeLAN` for verdadeiro
+- [ ] 8.3 Atualizar `PageData` e `handleDocument` para propagar `ShowQRCode = ExposeLAN`, e atualizar o template `web/templates/base.html` para renderizar o botão de QR Code condicionalmente (`{{if .ShowQRCode}}`)
+- [ ] 8.4 Atualizar o banner de console no terminal (`cmd/md_server/main.go`) para exibir a URL LAN somente quando `--lan` estiver ativo
+- [ ] 8.5 Implementar e atualizar testes unitários e de integração em `internal/adapters/in/cli/cli_test.go`, `internal/adapters/in/http/server_test.go` e `cmd/md_server/main_test.go`
+- [ ] 8.6 Validar a barreira de cobertura global >= 80% (`make test-coverage`) e aprovação no `make check`

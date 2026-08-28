@@ -67,3 +67,53 @@ O sistema SHALL processar arquivos Markdown no diretório raiz fornecido, conver
 - **GIVEN** que a aplicação possui interface gráfica minimalista e plugins avançados de renderização
 - **WHEN** o usuário ou desenvolvedor lê o `README.md` no repositório
 - **THEN** o documento SHALL exibir capturas de tela e mockups visuais ilustrativos com dados fictícios apresentando o visualizador em funcionamento, demonstrando o divisor de redimensionamento, os alertas do GitHub, diagramas Mermaid e o modal de QR Code.
+
+---
+
+### Requirement: Compartilhamento facilitado e acesso móvel via QR Code
+O sistema SHALL disponibilizar no cabeçalho da interface um botão que abre um modal interativo contendo o **QR Code** gerado com o endereço IP acessível na rede local (LAN), exibindo o botão exclusivamente quando a aplicação for iniciada com o argumento `--lan` ativo.
+
+#### Scenario: Exibição do modal de QR Code para escaneamento móvel
+- **GIVEN** que o usuário está visualizando qualquer documento Markdown na aplicação executada com a flag `--lan` em uma máquina com interface de rede local ativa (ex: IP `192.168.1.50` na porta `8080`)
+- **WHEN** o usuário clica no botão "QR Code" no cabeçalho
+- **THEN** o sistema SHALL abrir um modal centralizado exibindo o QR Code gerado contendo o endereço IP da rede local (ex: `http://192.168.1.50:8080/documento.md`), com o campo de texto contendo a mesma URL de rede e botão para copiar para a área de transferência.
+
+#### Scenario: Ocultação do botão de QR Code no modo padrão local (seguro)
+- **GIVEN** que o `md_server` é iniciado sem o argumento `--lan` (padrão local seguro)
+- **WHEN** o usuário acessa a aplicação no navegador em `http://localhost:8080`
+- **THEN** o sistema SHALL omitir/ocultar o botão "QR Code" no cabeçalho da interface web e manter o servidor escutando apenas em `127.0.0.1`.
+
+#### Scenario: Fallback para URL local quando nenhuma interface externa estiver disponível
+- **GIVEN** que a máquina servidora está desconectada de qualquer rede local (offline/sem adaptador de rede externo ativo)
+- **WHEN** o usuário abre o modal de QR Code
+- **THEN** o sistema SHALL utilizar a URL de host local atual (`window.location.origin` ou `http://localhost:<porta>`) como fallback seguro para a geração do QR Code e cópia de link.
+
+#### Scenario: Fechamento do modal de QR Code por clique externo ou botão
+- **GIVEN** que o modal de QR Code está visível na tela
+- **WHEN** o usuário clica no botão de fechar (X) ou em qualquer área externa ao modal
+- **THEN** o sistema SHALL ocultar o modal suavemente e retornar o foco para a leitura do documento.
+
+---
+
+### Requirement: Inicialização por Duplo Clique no Windows e CLI Multiplataforma
+O sistema SHALL suportar execução por duplo clique em ambientes Windows sem requisições de argumentos mantendo escuta local segura por padrão (`127.0.0.1`), e fornecer uma interface de linha de comando completa para Windows e Linux/AMD64 com suporte a parâmetros (`--dir`, `--port`, `--open`, `--lan`).
+
+#### Scenario: Inicialização por duplo clique no Windows (Zero-Config)
+- **GIVEN** que o usuário executa o binário `md_server.exe` no Windows através de duplo clique no Windows Explorer
+- **WHEN** a aplicação inicia sem flags de linha de comando
+- **THEN** o sistema SHALL assumir o diretório corrente como raiz, alocar a porta padrão `8080` (ou a próxima porta disponível), iniciar o servidor HTTP escutando em loopback local (`127.0.0.1`), exibir a URL de acesso Local no console e disparar automaticamente a abertura da URL no navegador padrão do sistema operacional.
+
+#### Scenario: Execução via CLI especificando diretório raiz e porta personalizada
+- **GIVEN** que o usuário executa `md_server --dir ./documentacao --port 9090 --open=false`
+- **WHEN** o comando é processado
+- **THEN** o sistema SHALL servir os arquivos localizados em `./documentacao` na porta `9090`, não abrir o navegador automaticamente e exibir no console a mensagem de servidor pronto com a URL local `http://localhost:9090`.
+
+#### Scenario: Execução via CLI com exposição em rede local
+- **GIVEN** que o usuário executa `md_server --dir ./docs --port 9090 --lan`
+- **WHEN** o comando é processado
+- **THEN** o sistema SHALL vincular a escuta em todas as interfaces (`0.0.0.0:9090`), habilitar o QR Code na interface e exibir no console as URLs de acesso Local (`http://localhost:9090`) e de Rede Local (`http://<lan-ip>:9090`).
+
+#### Scenario: Inspeção de versão da aplicação via comando CLI
+- **GIVEN** que o binário foi compilado com metadados de versão via ldflags
+- **WHEN** o usuário executa `md_server version` ou `md_server --version`
+- **THEN** o sistema SHALL exibir a versão semântica oficial (ou `dev`), o hash do commit e a data de compilação no formato padronizado.
