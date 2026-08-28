@@ -1,26 +1,50 @@
-# md_server 📄⚡
+# Markdown Viewer (md_server) 📄⚡
 
 [![Go Version](https://img.shields.io/badge/Go-1.22%2B-blue.svg)](https://golang.org)
 [![CI Quality Gate](https://img.shields.io/badge/CI-Quality%20Gate%20Passing-success.svg)](.github/workflows/ci.yml)
-[![Coverage](https://img.shields.io/badge/Coverage-%E2%89%A580%25%20(85.6%25)-brightgreen.svg)](scripts/coverage.sh)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20(amd64)-orange.svg)](#plataformas-alvo)
+[![Coverage](https://img.shields.io/badge/Coverage-%E2%89%A580%25%20(83.1%25)-brightgreen.svg)](scripts/coverage.sh)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20(amd64)-orange.svg)](#-instalação-e-uso)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**md_server** é um visualizador e servidor web local de arquivos Markdown ultrarrápido, minimalista e moderno, projetado para renderizar documentações locais com suporte completo a diagramas **Mermaid**, destaque de sintaxe (**Chroma**), árvore lateral de arquivos e navegação transparente por links internos.
+**Markdown Viewer (`md_server`)** é um visualizador e servidor web local de arquivos Markdown ultrarrápido, minimalista e moderno, projetado para renderizar documentações locais com suporte completo a **GitHub Alerts**, diagramas **Mermaid**, destaque de sintaxe (**Chroma**), **Fórmulas Matemáticas LaTeX (KaTeX)**, **Notas de Rodapé (Footnotes GFM)**, **Botão de Cópia em Código**, menu lateral redimensionável e compartilhamento instantâneo via **QR Code de Rede Local (LAN)**.
 
-Foi construído em **Go 1.22+** com **Clean Architecture (Ports & Adapters)**, gerando um binário estático e independente sem nenhuma dependência externa de runtime (zero Node.js, zero Python, zero browsers headless no servidor).
+Construído em **Go 1.22+** com **Clean Architecture (Ports & Adapters)**, gera um binário estático e independente sem nenhuma dependência externa de runtime (zero Node.js, zero Python, zero browsers headless no servidor).
 
 ---
 
-## ✨ Principais Recursos
+## 🖼️ Prévias Visuais da Interface (Mockups Fictícios)
 
-- 🖱️ **Zero-Config & Duplo Clique**: No Windows (ou Linux), dê um duplo clique no executável na pasta desejada para abrir a aplicação e o navegador padrão instantaneamente.
-- 📊 **Diagramas Mermaid Integrados**: Renderização assíncrona no cliente de blocos ` ```mermaid ` em diagramas SVG vetoriais e interativos.
-- 🎨 **Destaque de Sintaxe Colorido**: Suporte a dezenas de linguagens de programação (Go, Python, JS, TS, JSON, YAML, SQL, Shell, etc.) via Chroma com temas de alto contraste.
-- 🧭 **Navegação Contínua por Links**: Links Markdown relativos (`[Guia](./guia.md)`) são automaticamente interceptados e convertidos em rotas web fluidas.
-- 📁 **Árvore Lateral de Arquivos (Sidebar Tree)**: Navegue por todas as pastas e arquivos `.md` do diretório raiz através de uma barra lateral expansível.
-- 🌓 **Tema Claro / Escuro (Dark/Light Mode)**: Alternância de tema com persistência local e detecção automática da preferência do sistema operacional.
-- 🔒 **Segurança Nativa**: Prevenção estrita contra Directory Traversal (`..` escapes) garantindo que nenhum arquivo fora da pasta raiz seja acessado.
+### 🌓 Visualização Principal (Dark Mode)
+![Markdown Viewer Dark Mode](docs/screenshots/hero-preview-dark.svg)
+
+### 📌 GitHub Alerts & Recursos Avançados de Renderização
+![GitHub Alerts & Markdown Plugins](docs/screenshots/alerts-showcase.svg)
+
+### 📱 Acesso Móvel e Compartilhamento via QR Code (LAN IP)
+<p align="center">
+  <img src="docs/screenshots/qrcode-modal.svg" alt="QR Code Modal LAN" width="550">
+</p>
+
+---
+
+## ✨ Principais Recursos e Plugins Suportados
+
+| Recurso | Sintaxe / Descrição | Visual / Benefício |
+| :--- | :--- | :--- |
+| 🖱️ **Zero-Config & Duplo Clique** | Duplo clique no executável no Windows ou Linux | Abre servidor e navegador padrão instantaneamente |
+| 📌 **GitHub Alerts (Admonitions)** | `> [!NOTE]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!WARNING]`, `> [!CAUTION]` | Caixas temáticas com ícones SVG oficiais e cores de destaque |
+| 📊 **Diagramas Mermaid.js** | ` ```mermaid ` (flowcharts, sequence, class, state) | Diagramas vetoriais SVG interativos com re-renderização em troca de tema |
+| 🎨 **Syntax Highlighting (Chroma)** | ` ```go `, ` ```python `, ` ```ts `, etc. | Dezenas de linguagens coloridas com alto contraste e legibilidade |
+| 📋 **Botão de Cópia de Código** | Botão *Copiar* flutuante em blocos de código | Cópia com 1 clique para o clipboard com feedback "Copiado!" |
+| 📐 **Fórmulas Matemáticas & LaTeX** | Inline `$E=mc^2$` e em bloco `$$\int_0^1 f(x)dx$$` | Renderização matemática de alta definição via KaTeX |
+| 📝 **Notas de Rodapé (Footnotes)** | `Texto[^1]` e `[^1]: Definição` | Links sobrescritos com retorno suave `#fnref:1` e lista inferior |
+| 📖 **Listas de Definição** | `Termo\n: Definição do termo` | Tags semânticas `<dl>`, `<dt>`, `<dd>` estilizadas |
+| 🔤 **Tipografia Inteligente** | `---` $\rightarrow$ `—`, `--` $\rightarrow$ `–`, `...` $\rightarrow$ `…`, aspas curvas | Tipografia editorial moderna e refinada |
+| ↔️ **Menu Lateral Redimensionável** | Barra divisória arrastável (`180px` a `600px`) | Largura personalizada persistida no `localStorage` do navegador |
+| 📱 **QR Code com IP Local (LAN)** | Modal interativo no cabeçalho | Acesso direto de smartphones e tablets na mesma rede Wi-Fi |
+| 🌓 **Dark / Light Mode** | Alternador no cabeçalho com detecção de OS | Paletas de cores refinadas com alternância instantânea |
+| 🧭 **Navegação Transparente** | Links relativos `[Guia](./docs/guia.md)` | Conversão automática em rotas web fluidas |
+| 🔒 **Segurança Nativa** | Proteção contra Path Traversal (`..` escapes) | Rejeição estrita a tentativas de leitura fora da raiz |
 
 ---
 
@@ -49,7 +73,7 @@ Baixe a versão mais recente para o seu sistema operacional na aba [Releases](..
 | Flag | Shorthand | Padrão | Descrição |
 | :--- | :--- | :--- | :--- |
 | `--dir` | `-d` | `.` | Diretório raiz local contendo os arquivos Markdown a serem servidos |
-| `--port` | `-p` | `8080` | Porta TCP para escuta HTTP (aloca porta livre se ocupada) |
+| `--port` | `-p` | `8080` | Porta TCP para escuta HTTP (escuta em `0.0.0.0` para acesso LAN) |
 | `--open` | `-o` | `true` | Dispara automaticamente a abertura da URL no navegador padrão |
 | `--version` | `-v` | `false` | Exibe versão semântica, commit e data de compilação |
 
@@ -57,23 +81,24 @@ Baixe a versão mais recente para o seu sistema operacional na aba [Releases](..
 
 ## 🏗️ Arquitetura de Software (Clean Architecture)
 
-O código segue rigorosamente os princípios de Clean Architecture (Ports & Adapters / Arquitetura Hexagonal):
+O código segue rigorosamente os princípios de **Clean Architecture (Ports & Adapters / Arquitetura Hexagonal)**:
 
 ```
 md_server/
 ├── cmd/
-│   └── md_server/           # Ponto de entrada (Composition Root e CLI)
+│   └── md_server/           # Ponto de entrada (Composition Root e CLI Cobra)
 ├── internal/
 │   ├── core/
 │   │   ├── domain/          # Entidades de negócio (MarkdownDocument, FileNode, HealthStatus)
 │   │   ├── ports/           # Interfaces formais de entrada e saída
 │   │   └── services/        # Casos de uso (MarkdownService, HealthCheckService)
 │   ├── adapters/
-│   │   ├── in/              # Adaptadores de entrada (HTTP server, CLI Cobra)
+│   │   ├── in/              # Adaptadores de entrada (HTTP server, CLI Cobra, detecção de LAN IP)
 │   │   └── out/             # Adaptadores de saída (FS scanner, Goldmark/Chroma renderer, Browser launcher)
 │   ├── version/             # Injeção dinâmica de versão via ldflags
 │   └── testutils/           # Mocks determinísticos e fixtures para testes
-├── web/                     # Assets embutidos via //go:embed (Templates HTML, CSS, JS Mermaid)
+├── web/                     # Assets embutidos via //go:embed (Templates HTML, CSS, JS Mermaid/KaTeX)
+├── docs/screenshots/        # Prévias e mockups visuais do produto
 ├── scripts/                 # Automação de cobertura (scripts/coverage.sh >= 80%)
 └── .github/workflows/       # CI e Release Multiplataforma
 ```
@@ -104,18 +129,24 @@ make check
 # Compila o binário de produção local
 make build
 
-# Compila a matriz multiplataforma (Linux e Windows/AMD64)
+# Compila a matriz multiplataforma oficial (Linux e Windows/AMD64)
 make build-all
 ```
 
 ---
 
-## 🤖 Governança de Agentes de IA (Antigravity CLI)
+## 🌿 Boas Práticas e Governança Git
 
-Este projeto opera sob governança de agentes autônomos com o arcabouço **Antigravity (AGY)**:
-- **Prioridade de Ferramentas Nativas**: Uso mandatório de `write_to_file`, `replace_file_content`, `view_file` e `grep_search` (ver [AGENTS.md](file:///home/douglas/Workspace/gemini/markdown-server/AGENTS.md) e [.agent/rules/](file:///home/douglas/Workspace/gemini/markdown-server/.agent/rules/)).
-- **Alinhamento PO & QA**: Especificações gerenciadas via OpenSpec em [openspec/](file:///home/douglas/Workspace/gemini/markdown-server/openspec/).
-- **Higiene Git**: Padrão Conventional Commits, branches isoladas e integração obrigatória via **Squash Merge**.
+- **Branching Model**: Todo desenvolvimento de novas funcionalidades ocorre em branches isoladas `feature/<nome-da-mudança>`.
+- **Conventional Commits**: Commits estruturados com tipos semânticos claros:
+  - `feat(...)`: Novas funcionalidades e recursos.
+  - `fix(...)`: Correções de bugs.
+  - `style(...)`: Ajustes visuais, CSS e templates.
+  - `docs(...)`: Documentações e README.
+  - `test(...)`: Novos testes unitários ou de integração.
+  - `refactor(...)`: Refatoração sem alteração de comportamento externo.
+- **Squash Merge**: Merge na branch principal (`main`) executado exclusivamente via **Squash Merge** para assegurar um histórico linear e limpo.
+- **Barreira de Cobertura**: Nenhum código é integrado sem atingir a barreira mandatória de cobertura global $\ge 80\%$.
 
 ---
 
