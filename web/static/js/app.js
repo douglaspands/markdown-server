@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initSidebarResizer();
   initQRCodeModal();
   initMermaid();
+  initCodeCopyButtons();
+  initMathEquations();
   initActiveTreeLink();
 });
 
@@ -337,7 +339,77 @@ function escapeHTML(str) {
 }
 
 /* =========================================================================
-   5. Destaque do Link Ativo na Árvore de Arquivos
+   6. Botão de Cópia em Blocos de Código (Copy Code Button)
+   ========================================================================= */
+function initCodeCopyButtons() {
+  const codeBlocks = document.querySelectorAll(".highlight, pre:not(.mermaid-error-code)");
+
+  codeBlocks.forEach((block) => {
+    // Evita duplicar o botão se já foi injetado
+    if (block.querySelector(".copy-code-btn") || block.classList.contains("mermaid")) return;
+
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy-code-btn";
+    copyBtn.type = "button";
+    copyBtn.setAttribute("aria-label", "Copiar código");
+    copyBtn.textContent = "Copiar";
+
+    copyBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const codeEl = block.querySelector("code") || block;
+      const textToCopy = codeEl.innerText || codeEl.textContent;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        copyBtn.textContent = "Copiado!";
+        copyBtn.classList.add("copied");
+
+        setTimeout(() => {
+          copyBtn.textContent = "Copiar";
+          copyBtn.classList.remove("copied");
+        }, 1800);
+      }).catch((err) => {
+        console.warn("Falha ao copiar código:", err);
+      });
+    });
+
+    block.appendChild(copyBtn);
+  });
+}
+
+/* =========================================================================
+   7. Renderização Automática de Fórmulas Matemáticas LaTeX (KaTeX)
+   ========================================================================= */
+function initMathEquations() {
+  const content = document.querySelector(".markdown-body");
+  if (!content) return;
+
+  function renderMath() {
+    if (typeof renderMathInElement === "function") {
+      try {
+        renderMathInElement(content, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\(", right: "\\)", display: false },
+            { left: "\\[", right: "\\]", display: true }
+          ],
+          throwOnError: false
+        });
+      } catch (err) {
+        console.warn("Erro ao processar fórmulas KaTeX:", err);
+      }
+    }
+  }
+
+  if (typeof renderMathInElement === "function") {
+    renderMath();
+  } else {
+    window.addEventListener("load", renderMath);
+  }
+}
+
+/* =========================================================================
+   8. Destaque do Link Ativo na Árvore de Arquivos
    ========================================================================= */
 function initActiveTreeLink() {
   const currentPath = window.location.pathname;
