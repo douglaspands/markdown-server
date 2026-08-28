@@ -98,6 +98,14 @@ flowchart TD
     - Preservação da renderização de diagramas Mermaid (`font-family: inherit`) e fórmulas KaTeX (`KaTeX_Main, Times New Roman, serif`).
 - **Justificativa**: Garante legibilidade editorial de ponta em qualquer sistema operacional (macOS, Windows, Linux) sem overhead de download de fontes pesadas, mantendo o funcionamento 100% offline.
 
+### 10. Otimização Óptica de Escaneabilidade do QR Code
+- **Decisão**:
+  - **Dimensões e Proporção**: Aumentar a renderização do QR Code de `190x190` para `240x240` pixels no `web/static/js/app.js`, reduzindo a necessidade de aproximação excessiva da câmera ao monitor.
+  - **Moldura de Alto Contraste (Quiet Zone)**: Definir no `web/static/css/style.css` que o container `.qrcode-box` possua fundo branco fixo (`#ffffff`), padding de isolamento (`1.25rem`) e borda suave mesmo no modo escuro (*Dark Mode*), assegurando contraste estrito 21:1 necessário para os sensores de visão computacional (iOS Camera, Google Lens).
+  - **Nível de Correção de Erros Resiliente**: Utilizar `QRCode.CorrectLevel.M` (15% de recuperação de dados) para compensar reflexos especulares e cintilação de tela (*flicker*) sem aumentar excessivamente a densidade de pontos.
+  - **Destaque do IP para Acesso Alternativo**: Exibir no modal o endereço IP e a porta de rede local em badge visual de destaque com botão de cópia instantânea para digitação direta se o usuário preferir.
+- **Justificativa**: Elimina a dificuldade comum de câmeras de celular em focar em telas de computador (devido a reflexos, pixels RGB e fundos escuros), tornando o escaneamento praticamente instantâneo.
+
 ## Risks / Trade-offs
 
 - **[Risco] Conflito entre símbolos de dólar (`$`) em textos comuns e fórmulas matemáticas**: Valores monetários normais podem ser interpretados acidentalmente como LaTeX.

@@ -56,3 +56,9 @@
 - [x] 10.1 Atualizar variáveis CSS `--font-sans` e `--font-mono` em `web/static/css/style.css` com a hierarquia de fontes de alto padrão da indústria
 - [x] 10.2 Ajustar estilos de tipografia de cabeçalhos, corpo de texto, tabelas, alertas e blocos de código (`.highlight`, `code`, `pre`, `.mermaid`) para máxima legibilidade e alinhamento visual
 - [x] 10.3 Atualizar documentação e recursos no `README.md`
+
+## 11. Otimização Óptica de Escaneabilidade do QR Code
+
+- [ ] 11.1 Aumentar a dimensão de renderização do QR Code para 240x240 pixels com `CorrectLevel.M` e normalização de URL em `web/static/js/app.js`
+- [ ] 11.2 Estilizar a moldura branca de alto contraste (*quiet zone*), badge de IP/Porta e botões de ação em `web/static/css/style.css` e `web/templates/base.html`
+- [ ] 11.3 Atualizar mockups e documentação no `README.md`

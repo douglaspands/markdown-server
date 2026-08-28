@@ -128,6 +128,16 @@ O sistema SHALL disponibilizar no cabeçalho da interface um botão que abre um 
 - **WHEN** o usuário clica no botão "QR Code" no cabeçalho
 - **THEN** o sistema SHALL abrir um modal centralizado exibindo o QR Code gerado contendo o endereço IP da rede local (ex: `http://192.168.1.50:8080/documento.md`), com o campo de texto contendo a mesma URL de rede e botão para copiar para a área de transferência.
 
+#### Scenario: Otimização de escaneabilidade com quiet zone branca e tamanho ampliado
+- **GIVEN** que o modal de QR Code é aberto em qualquer tema visual (incluindo Dark Mode)
+- **WHEN** o QR Code é renderizado na tela
+- **THEN** o sistema SHALL exibir o código em tamanho ampliado (240x240 pixels) dentro de uma moldura branca isolada (*quiet zone*) com contraste máximo (21:1) e nível de correção de erros calibrado (`CorrectLevel.M`), assegurando reconhecimento óptico instantâneo pelas câmeras de smartphones.
+
+#### Scenario: Exibição em destaque do endereço IP para conexão direta
+- **GIVEN** que o usuário abriu o modal de QR Code
+- **WHEN** o modal é renderizado
+- **THEN** o sistema SHALL exibir o endereço IP e a porta em badge de texto em destaque e campo legível com botão "Copiar", permitindo conexão manual rápida sem esforço.
+
 #### Scenario: Ocultação do botão de QR Code no modo padrão local (seguro)
 - **GIVEN** que o `md_server` é iniciado sem o argumento `--lan` (padrão local seguro)
 - **WHEN** o usuário acessa a aplicação no navegador em `http://localhost:8080`

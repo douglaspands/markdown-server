@@ -18,6 +18,7 @@ Além disso, diagramas complexos de arquitetura e fluxogramas extensos frequente
 - **Botão de Cópia em Blocos de Código (Code Copy Action)**: Inclusão de botão interativo e discreto de cópia para a área de transferência em todos os blocos de código formatados com feedback visual imediato.
 - **Zoom e Pan Interativo para Diagramas (Mermaid Navigation)**: Controles flutuantes de ampliação (+), redução (-), reset (↺) e navegação por clique e arraste (*drag-and-pan*) intuitivo em todos os diagramas Mermaid gerados, com suporte a roda do mouse (wheel/Ctrl+wheel) e toque móvel.
 - **Controle Seguro de Exposição de Rede Local (`--lan`)**: Inclusão da flag CLI `--lan` (shorthand `-l`, padrão `false`). Por padrão, o servidor escuta em `127.0.0.1` e o botão de QR Code fica oculto; ao passar `--lan`, o servidor escuta em `0.0.0.0`, exibe a URL LAN no console e habilita o botão de QR Code no cabeçalho.
+- **Otimização de Escaneabilidade de QR Code e Acesso Móvel**: Aprimoramento da captura de QR Code por câmeras de smartphones através de: (1) ampliação do tamanho para 240x240px com renderização vetorial nítida, (2) moldura branca dedicada (*quiet zone*) com contraste máximo 21:1 imune ao modo escuro, (3) nível de correção de erros calibrado (`CorrectLevel.M`) para absorver reflexos de monitores, (4) simplificação da URL canônica para reduzir a densidade da matriz, e (5) exibição em destaque do IP/Porta para conexão manual rápida.
 - **Documentação Visual com Prints de Tela (README.md)**: Atualização do `README.md` com prévias visuais em alta definição e mockups de tela (com dados fictícios ilustrativos) apresentando a interface do Markdown Viewer, suporte a temas (Dark/Light), alertas GitHub, diagramas Mermaid com controles de zoom, fórmulas e menu lateral redimensionável.
 
 ## Capabilities
@@ -26,7 +27,7 @@ Além disso, diagramas complexos de arquitetura e fluxogramas extensos frequente
 <!-- Nenhuma nova capacidade raiz necessária; expande os requisitos existentes de fundação e renderização -->
 
 ### Modified Capabilities
-- `project-foundation`: Modifica e expande os requisitos de renderização Markdown para incluir GitHub Alerts/Callouts, Notas de Rodapé (Footnotes), Fórmulas Matemáticas KaTeX, Listas de Definição, Tipografia Inteligente, stack tipográfica moderna para leitura e código-fonte/scripts, Emojis, Botão de Cópia em blocos de código, controles de Zoom e Pan em diagramas Mermaid, flag de controle seguro de exposição de rede local (`--lan`) com ativação condicional do QR Code e prévias visuais no README.
+- `project-foundation`: Modifica e expande os requisitos de renderização Markdown para incluir GitHub Alerts/Callouts, Notas de Rodapé (Footnotes), Fórmulas Matemáticas KaTeX, Listas de Definição, Tipografia Inteligente, stack tipográfica moderna para leitura e código-fonte/scripts, Emojis, Botão de Cópia em blocos de código, controles de Zoom e Pan em diagramas Mermaid, flag de controle seguro de exposição de rede local (`--lan`) com ativação condicional do QR Code, otimização de escaneabilidade do QR Code e prévias visuais no README.
 
 ## Impact
 
@@ -37,8 +38,8 @@ Além disso, diagramas complexos de arquitetura e fluxogramas extensos frequente
   - `cmd/md_server/main.go`: Exibição de URL LAN no banner apenas quando `--lan` for habilitado.
   - `internal/adapters/out/renderer/goldmark.go`: Extensões Goldmark e GitHub Alerts.
 - **Frontend (HTML/CSS/JS)**:
-  - `web/templates/base.html`: Renderização condicional do botão de QR Code (`{{if .ShowQRCode}}`).
-  - `web/static/css/style.css`: Configuração das variáveis de fonte `--font-sans` e `--font-mono`, estilos de alerts, footnotes, KaTeX, copy button e barra de controles flutuantes de Zoom & Pan para Mermaid.
-  - `web/static/js/app.js`: Cópia de código, KaTeX, gerenciador de Zoom & Pan com arrasto de mouse/touch e inicialização segura de QR Code.
+  - `web/templates/base.html`: Renderização condicional do botão de QR Code (`{{if .ShowQRCode}}`) e layout otimizado do modal de compartilhamento.
+  - `web/static/css/style.css`: Moldura de alto contraste (*quiet zone*) para o container do QR Code (`.qrcode-box`), badge de IP legível e estilos de botões.
+  - `web/static/js/app.js`: Geração do QR Code em 240x240px com `CorrectLevel.M`, normalização de URL simplificada e manipulador de cópia rápida.
 - **Documentação e Assets (`docs/screenshots/` e `README.md`)**:
   - Mockups visuais vetoriais em `docs/screenshots/` e atualização do `README.md` documentando a nova flag `--lan` e a navegação em diagramas Mermaid.
