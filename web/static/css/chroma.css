@@ -1,0 +1,21 @@
+/* Chroma Syntax Highlighting Styles */
+.chroma { color: #f8f8f2; background-color: transparent; }
+.chroma .k, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr { color: #ff79c6; font-weight: bold; }
+.chroma .kt { color: #8be9fd; }
+.chroma .na { color: #50fa7b; }
+.chroma .nb { color: #8be9fd; font-style: italic; }
+.chroma .nc { color: #50fa7b; }
+.chroma .no { color: #bd93f9; }
+.chroma .nd { color: #50fa7b; }
+.chroma .ne { color: #ff5555; }
+.chroma .nf { color: #50fa7b; }
+.chroma .nl { color: #8be9fd; }
+.chroma .nn { color: #f8f8f2; }
+.chroma .nt { color: #ff79c6; }
+.chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi, .chroma .vm { color: #8be9fd; }
+.chroma .s, .chroma .sa, .chroma .sb, .chroma .sc, .chroma .dl, .chroma .sd, .chroma .s2, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx, .chroma .sr, .chroma .s1, .chroma .ss { color: #f1fa8c; }
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo { color: #bd93f9; }
+.chroma .c, .chroma .ch, .chroma .cm, .chroma .c1, .chroma .cs, .chroma .cp, .chroma .cpf { color: #6272a4; font-style: italic; }
+.chroma .o, .chroma .ow { color: #ff79c6; }
+.chroma .p { color: #f8f8f2; }
+.chroma .w { color: #f8f8f2; }

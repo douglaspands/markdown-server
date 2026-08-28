@@ -1,0 +1,55 @@
+schema: spec-driven
+
+context: |
+  Projeto: md_server (Visualizador e Servidor Web Local de Markdown com Suporte a Mermaid, Highlighting e Navegação Fluida)
+  Linguagem e Stack: Go (Golang) 1.22+, Clean Architecture (Ports & Adapters / Hexagonal)
+  Renderização: net/http stdlib, goldmark (Markdown AST/Parser), Chroma (Syntax Highlighting), Mermaid.js (Diagramas via Web UI)
+  Frontend: Embedded Assets (HTML5/CSS3 moderno e responsivo, Dark/Light mode, Vanilla JS, //go:embed)
+  Plataformas Alvo: Windows (amd64) e Linux (amd64) com suporte a duplo clique (Zero-Config GUI launcher no Windows) e CLI robusto
+  Qualidade e Testes: TDD/BDD com testify (assert/require), barreira de cobertura global inegociável >= 80% (scripts/coverage.sh)
+  Automação: Makefile autodocumentado universal (make check, make test-coverage, make lint, make build-all)
+  Governança de Agentes IA (Antigravity): Prioridade estrita a ferramentas nativas de I/O, economia de tokens, convenção de Conventional Commits e fluxo Git Feature Branch + Squash Merge
+  Idioma Oficial da Especificação: Português do Brasil (PT-BR)
+
+rules:
+  proposal:
+    - "O documento DEVE ser redigido integralmente em Português do Brasil (PT-BR)."
+    - "Focar no porquê (motivação de negócio e do usuário) e o que muda (escopo funcional e técnico)."
+    - "Declarar explicitamente a seção Capabilities com todas as novas capacidades (specs/<capability-path>/spec.md) ou capacidades modificadas."
+    - "Avaliar e documentar detalhadamente o impacto no ecossistema, compatibilidade de SO (Windows/Linux) e performance."
+    - "Manter concisão e clareza, reservando detalhes profundos de implementação técnica para o design.md."
+
+  specs:
+    - "O documento DEVE ser redigido em Português do Brasil (PT-BR) sob a ótica CONJUNTA e colaborativa de Product Owner (PO) e Quality Assurance (QA)."
+    - "Diretrizes para o Product Owner (PO): Redação em linguagem clara, ubíqua e acessível ao negócio, descrevendo o valor entregue sem detalhes internos de implementação técnica que obscureçam a regra."
+    - "Diretrizes para o Product Owner (PO): Seção '## Purpose' obrigatória (mínimo de 50 caracteres) explicando claramente o objetivo da capacidade para o produto e seus usuários finais."
+    - "Diretrizes para o Product Owner (PO): Requisitos funcionais declarados como '### Requirement: <Nome do Requisito>' com critérios de aceitação objetivos, mensuráveis e verificáveis."
+    - "Diretrizes para o Quality Assurance (QA): Estruturação formal de cenários BDD/Gherkin com 4 hashtags '#### Scenario: <Nome do Cenário>'."
+    - "Diretrizes para o Quality Assurance (QA): Utilização obrigatória de bullets padronizados '- **GIVEN** <contexto>', '- **WHEN** <ação>' e '- **THEN** <resultado esperado>'."
+    - "Diretrizes para o Quality Assurance (QA): Cobertura determinística de fluxos principais (caminho feliz), fluxos alternativos, validação de limites/bordas (edge cases) e tratamento de erros/exceções."
+    - "Diretrizes para o Quality Assurance (QA): Cenários redigidos com precisão inequívoca para facilitar a tradução direta em testes automatizados (Go subtests t.Run, Godog, Playwright ou E2E)."
+
+  design:
+    - "O documento DEVE ser redigido em Português do Brasil (PT-BR)."
+    - "Adotar os padrões da Clean Architecture com isolamento estrito em internal/core/domain, internal/core/ports, internal/core/services e internal/adapters."
+    - "Especificar contratos de interfaces de portas (ports) de entrada e saída."
+    - "Detalhar a estratégia de inicialização (composition root em cmd/), injeção manual de dependências e tratamento de ciclo de vida (graceful shutdown com context.Context)."
+    - "Detalhar a estratégia de embedded assets (templates HTML, estilos CSS, scripts JS Mermaid), renderização Markdown/AST, reescrita de links relativos para navegação web e abertura automática de navegador no Windows/Linux."
+    - "Incluir diagramas conceituais e arquiteturais em Mermaid (arquitetura, fluxo de requisição e ciclo de vida)."
+
+  tasks:
+    - "O documento DEVE ser redigido em Português do Brasil (PT-BR)."
+    - "Estruturação em seções numeradas sequencialmente '## N. Nome do Grupo de Tarefas'."
+    - "Itens de ação com checkboxes padronizados '- [ ] N.M Descrição da Tarefa'."
+    - "As tarefas devem cobrir o ciclo completo: scaffolding, domínio, portas, serviços, adaptadores (HTTP/CLI/FS/Renderer), templates embutidos, testes unitários/BDD com cobertura >= 80%, Makefile, CI/CD e validação com 'make check'."
+
+operations:
+  apply:
+    guidance:
+      - "Utilizar estritamente ferramentas nativas de I/O (write_to_file, replace_file_content, view_file, grep_search, find_by_name, list_dir)."
+      - "Executar 'make test' e 'make check' para validar alterações de código e assegurar cobertura de testes >= 80% antes de marcar qualquer tarefa como concluída."
+      - "Seguir o padrão Conventional Commits para rastreabilidade limpa de mudanças."
+  archive:
+    guidance:
+      - "Validar a integridade global das especificações antes de arquivar executando 'openspec validate --all'."
+      - "Resumir o resultado final da entrega e o status das capacidades implementadas."

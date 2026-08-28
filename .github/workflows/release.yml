@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build & Release Multiplataforma
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: linux
+            arch: amd64
+            binary_name: md_server
+            package_name: md_server-linux-amd64.tar.gz
+          - os: windows
+            arch: amd64
+            binary_name: md_server.exe
+            package_name: md_server-windows-amd64.zip
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          check-latest: true
+
+      - name: Compilar Binário de Produção
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+          CGO_ENABLED: 0
+        run: |
+          VERSION="${{ github.ref_name }}"
+          COMMIT="${{ github.sha }}"
+          DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          LDFLAGS="-s -w -X 'github.com/douglas/markdown-server/internal/version.Version=${VERSION}' -X 'github.com/douglas/markdown-server/internal/version.Commit=${COMMIT}' -X 'github.com/douglas/markdown-server/internal/version.Date=${DATE}'"
+          
+          mkdir -p dist
+          go build -ldflags="${LDFLAGS}" -o "dist/${{ matrix.binary_name }}" ./cmd/md_server/main.go
+
+      - name: Empacotar Artefato (Linux .tar.gz)
+        if: matrix.os == 'linux'
+        run: |
+          cd dist
+          tar -czvf "${{ matrix.package_name }}" "${{ matrix.binary_name }}"
+          sha256sum "${{ matrix.package_name }}" > "${{ matrix.package_name }}.sha256"
+
+      - name: Empacotar Artefato (Windows .zip)
+        if: matrix.os == 'windows'
+        run: |
+          cd dist
+          zip "${{ matrix.package_name }}" "${{ matrix.binary_name }}"
+          sha256sum "${{ matrix.package_name }}" > "${{ matrix.package_name }}.sha256"
+
+      - name: Publicar na Release do GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/${{ matrix.package_name }}
+            dist/${{ matrix.package_name }}.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

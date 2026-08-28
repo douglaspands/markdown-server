@@ -1,0 +1,37 @@
+# Binários compilados e executáveis
+bin/
+dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Relatórios e saídas de teste / cobertura
+coverage.out
+coverage.html
+coverage.txt
+*.prof
+
+# Segredos e variáveis de ambiente
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# Caches e ferramentas de compilação
+.cache/
+.air.tmp/
+vendor/
+
+# Configurações de IDEs e do Sistema Operacional
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini

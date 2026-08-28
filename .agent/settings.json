@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json.schemastore.org/partial-gemini-settings.json",
+  "terminal": {
+    "autoApprove": [
+      {
+        "command": "make*",
+        "action": "allow",
+        "description": "Permitir execução de alvos do Makefile universal (test, check, lint, build, etc.)"
+      },
+      {
+        "command": "go *",
+        "action": "allow",
+        "description": "Permitir execução de comandos de ciclo de vida e testes em Go (go test, go mod tidy, go vet, etc.)"
+      },
+      {
+        "command": "openspec *",
+        "action": "allow",
+        "description": "Permitir comandos do framework OpenSpec (status, instructions, validate, archive, etc.)"
+      },
+      {
+        "command": "git *",
+        "action": "allow",
+        "description": "Permitir comandos Git de inspeção, branches e commits convencionais"
+      },
+      {
+        "command": "golangci-lint *",
+        "action": "allow",
+        "description": "Permitir execução do linter Go"
+      },
+      {
+        "command": "govulncheck *",
+        "action": "allow",
+        "description": "Permitir verificação de vulnerabilidades de dependências"
+      },
+      {
+        "command": "*scripts/coverage.sh*",
+        "action": "allow",
+        "description": "Permitir execução do script de cálculo e validação de cobertura >= 80%"
+      }
+    ]
+  },
+  "context": {
+    "preferNativeTools": true,
+    "tokenEconomy": true,
+    "strictCleanArchitecture": true
+  }
+}

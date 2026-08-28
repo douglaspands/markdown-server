@@ -1,0 +1,350 @@
+/**
+ * Markdown Viewer - Aplicação Frontend (Interatividade, QR Code, Mermaid, Temas)
+ */
+document.addEventListener("DOMContentLoaded", () => {
+  initTheme();
+  initSidebar();
+  initSidebarResizer();
+  initQRCodeModal();
+  initMermaid();
+  initActiveTreeLink();
+});
+
+/* =========================================================================
+   1. Gerenciamento de Tema (Dark / Light Mode)
+   ========================================================================= */
+function initTheme() {
+  const themeToggleBtn = document.getElementById("theme-toggle");
+  const themeIcon = document.getElementById("theme-icon");
+  const html = document.documentElement;
+
+  const savedTheme = localStorage.getItem("md_theme") ||
+    (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+  applyTheme(savedTheme);
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener("click", () => {
+      const currentTheme = html.getAttribute("data-theme") || "light";
+      const newTheme = currentTheme === "dark" ? "light" : "dark";
+      applyTheme(newTheme);
+      localStorage.setItem("md_theme", newTheme);
+      renderMermaidDiagrams(newTheme);
+    });
+  }
+
+  function applyTheme(theme) {
+    html.setAttribute("data-theme", theme);
+    if (themeIcon) {
+      themeIcon.textContent = theme === "dark" ? "🌙" : "☀️";
+    }
+  }
+}
+
+/* =========================================================================
+   2. Menu Lateral Retrátil (Sidebar Toggle) & Suporte a Mobile Drawer
+   ========================================================================= */
+function initSidebar() {
+  const sidebar = document.getElementById("app-sidebar");
+  const toggleBtn = document.getElementById("sidebar-toggle-btn");
+  const backdrop = document.getElementById("sidebar-backdrop");
+
+  if (!sidebar || !toggleBtn) return;
+
+  // Restaura estado no Desktop
+  const isDesktop = window.innerWidth > 768;
+  const isCollapsed = localStorage.getItem("md_sidebar_collapsed") === "true";
+
+  if (isDesktop && isCollapsed) {
+    sidebar.classList.add("collapsed");
+  }
+
+  // Toggle do menu
+  toggleBtn.addEventListener("click", () => {
+    if (window.innerWidth <= 768) {
+      // Mobile / Tablet Drawer
+      const isOpen = sidebar.classList.contains("mobile-open");
+      if (isOpen) {
+        closeMobileSidebar();
+      } else {
+        openMobileSidebar();
+      }
+    } else {
+      // Desktop Collapsible
+      sidebar.classList.toggle("collapsed");
+      localStorage.setItem("md_sidebar_collapsed", sidebar.classList.contains("collapsed"));
+    }
+  });
+
+  // Atalho de Teclado (Ctrl+B ou Cmd+B)
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
+      e.preventDefault();
+      toggleBtn.click();
+    }
+  });
+
+  // Fecha gaveta mobile ao clicar no backdrop ou em um link
+  if (backdrop) {
+    backdrop.addEventListener("click", closeMobileSidebar);
+  }
+
+  document.querySelectorAll(".file-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      if (window.innerWidth <= 768) {
+        closeMobileSidebar();
+      }
+    });
+  });
+
+  function openMobileSidebar() {
+    sidebar.classList.add("mobile-open");
+    if (backdrop) backdrop.classList.add("active");
+  }
+
+  function closeMobileSidebar() {
+    sidebar.classList.remove("mobile-open");
+    if (backdrop) backdrop.classList.remove("active");
+  }
+
+  // Toggle de Diretórios na Árvore
+  document.querySelectorAll(".dir-title").forEach((title) => {
+    title.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const parent = title.parentElement;
+      const children = parent.querySelector(".dir-children");
+      const arrow = title.querySelector(".dir-arrow");
+
+      if (children) {
+        const isHidden = children.style.display === "none";
+        children.style.display = isHidden ? "block" : "none";
+        if (arrow) {
+          arrow.textContent = isHidden ? "▾" : "▸";
+        }
+      }
+    });
+  });
+}
+
+/* =========================================================================
+   3. Divisor Maleável de Redimensionamento da Barra Lateral (Splitter)
+   ========================================================================= */
+function initSidebarResizer() {
+  const resizer = document.getElementById("sidebar-resizer");
+  const sidebar = document.getElementById("app-sidebar");
+  if (!resizer || !sidebar) return;
+
+  let isDragging = false;
+  const MIN_WIDTH = 180;
+
+  // Restaura largura previamente customizada pelo usuário
+  const savedWidth = localStorage.getItem("md_sidebar_width");
+  if (savedWidth && window.innerWidth > 768) {
+    const parsed = parseInt(savedWidth, 10);
+    if (!isNaN(parsed) && parsed >= MIN_WIDTH) {
+      sidebar.style.width = `${parsed}px`;
+      sidebar.style.minWidth = `${parsed}px`;
+    }
+  }
+
+  const onMouseDown = (e) => {
+    if (window.innerWidth <= 768 || sidebar.classList.contains("collapsed")) return;
+    isDragging = true;
+    document.body.classList.add("resizing");
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+    e.preventDefault();
+  };
+
+  const onMouseMove = (e) => {
+    if (!isDragging) return;
+    const maxWidth = Math.min(600, Math.floor(window.innerWidth * 0.55));
+    let newWidth = e.clientX;
+    if (newWidth < MIN_WIDTH) newWidth = MIN_WIDTH;
+    if (newWidth > maxWidth) newWidth = maxWidth;
+
+    sidebar.style.width = `${newWidth}px`;
+    sidebar.style.minWidth = `${newWidth}px`;
+  };
+
+  const onMouseUp = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    document.body.classList.remove("resizing");
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+
+    const currentWidth = parseInt(sidebar.style.width, 10);
+    if (!isNaN(currentWidth) && currentWidth >= MIN_WIDTH) {
+      localStorage.setItem("md_sidebar_width", currentWidth);
+    }
+  };
+
+  resizer.addEventListener("mousedown", onMouseDown);
+}
+
+/* =========================================================================
+   4. Modal e Geração de QR Code com Endereço de Rede Local (LAN)
+   ========================================================================= */
+function initQRCodeModal() {
+  const qrBtn = document.getElementById("qrcode-btn");
+  const modal = document.getElementById("qrcode-modal");
+  const closeBtn = document.getElementById("close-qrcode-modal");
+  const qrContainer = document.getElementById("qrcode-canvas");
+  const urlInput = document.getElementById("share-url-input");
+  const copyBtn = document.getElementById("copy-url-btn");
+
+  if (!qrBtn || !modal) return;
+
+  qrBtn.addEventListener("click", () => {
+    // Determina a URL acessível na rede local
+    const lanBaseURL = modal.getAttribute("data-lan-url");
+    let shareURL = "";
+
+    if (lanBaseURL && !lanBaseURL.includes("127.0.0.1") && !lanBaseURL.includes("localhost")) {
+      try {
+        const lanUrlObj = new URL(lanBaseURL);
+        shareURL = `${lanUrlObj.protocol}//${lanUrlObj.host}${window.location.pathname}${window.location.search}${window.location.hash}`;
+      } catch (err) {
+        shareURL = `${lanBaseURL.replace(/\/$/, "")}${window.location.pathname}${window.location.search}${window.location.hash}`;
+      }
+    } else {
+      shareURL = window.location.href;
+    }
+
+    if (urlInput) urlInput.value = shareURL;
+
+    if (qrContainer && window.QRCode) {
+      qrContainer.innerHTML = "";
+      new window.QRCode(qrContainer, {
+        text: shareURL,
+        width: 190,
+        height: 190
+      });
+    }
+
+    modal.classList.add("active");
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("active");
+    });
+  }
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.classList.remove("active");
+    }
+  });
+
+  if (copyBtn && urlInput) {
+    copyBtn.addEventListener("click", () => {
+      urlInput.select();
+      navigator.clipboard.writeText(urlInput.value).then(() => {
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = "Copiado!";
+        setTimeout(() => {
+          copyBtn.textContent = originalText;
+        }, 1500);
+      });
+    });
+  }
+}
+
+/* =========================================================================
+   5. Renderização Assíncrona e Robusta de Diagramas Mermaid.js
+   ========================================================================= */
+function initMermaid() {
+  const mermaidBlocks = document.querySelectorAll(".mermaid");
+  if (mermaidBlocks.length === 0) return;
+
+  // Salva o código-fonte original em data-original-code para viabilizar re-renderizações
+  mermaidBlocks.forEach((el, idx) => {
+    if (!el.getAttribute("data-original-code")) {
+      el.setAttribute("data-original-code", el.textContent.trim());
+      el.setAttribute("id", `mermaid-block-${idx}`);
+    }
+  });
+
+  const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+  renderMermaidDiagrams(currentTheme);
+}
+
+async function renderMermaidDiagrams(theme) {
+  const mermaidBlocks = document.querySelectorAll(".mermaid");
+  if (mermaidBlocks.length === 0) return;
+
+  if (typeof window.loadMermaidLibrary === "function") {
+    try {
+      await window.loadMermaidLibrary();
+    } catch (err) {
+      console.warn("Não foi possível carregar o módulo Mermaid:", err);
+      return;
+    }
+  }
+
+  if (!window.mermaid) return;
+
+  try {
+    window.mermaid.initialize({
+      startOnLoad: false,
+      theme: theme === "dark" ? "dark" : "default",
+      securityLevel: "loose",
+      fontFamily: "inherit",
+      logLevel: "error"
+    });
+
+    for (let i = 0; i < mermaidBlocks.length; i++) {
+      const el = mermaidBlocks[i];
+      const rawCode = el.getAttribute("data-original-code");
+      if (!rawCode) continue;
+
+      const containerId = `mermaid-svg-${i}-${Date.now()}`;
+      try {
+        const { svg } = await window.mermaid.render(containerId, rawCode);
+        el.innerHTML = svg;
+        el.classList.remove("mermaid-error");
+      } catch (renderErr) {
+        console.warn(`Erro de sintaxe no diagrama Mermaid #${i}:`, renderErr);
+        el.classList.add("mermaid-error");
+        el.innerHTML = `
+          <div class="mermaid-error-box">
+            <div class="mermaid-error-header">
+              <span>⚠️ Erro de sintaxe no diagrama Mermaid</span>
+            </div>
+            <pre class="mermaid-error-code"><code>${escapeHTML(rawCode)}</code></pre>
+          </div>
+        `;
+        const badEl = document.getElementById(containerId);
+        if (badEl) badEl.remove();
+        const badD = document.getElementById("d" + containerId);
+        if (badD) badD.remove();
+      }
+    }
+  } catch (err) {
+    console.warn("Erro geral na renderização Mermaid:", err);
+  }
+}
+
+function escapeHTML(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/* =========================================================================
+   5. Destaque do Link Ativo na Árvore de Arquivos
+   ========================================================================= */
+function initActiveTreeLink() {
+  const currentPath = window.location.pathname;
+  document.querySelectorAll(".file-link").forEach((link) => {
+    const href = link.getAttribute("href");
+    if (href === currentPath || (currentPath === "/" && (href === "/README.md" || href === "/readme.md"))) {
+      link.classList.add("active");
+    }
+  });
+}

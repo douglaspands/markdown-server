@@ -1,0 +1,7 @@
+{{define "content"}}
+<article class="markdown-body">
+  {{if .Document}}
+    {{.Document.HTMLContent | unescapeHTML}}
+  {{end}}
+</article>
+{{end}}

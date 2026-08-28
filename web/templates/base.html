@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>{{if .Document}}{{.Document.Title}} - {{end}}Markdown Viewer</title>
+  
+  <!-- Favicon e Ícone -->
+  <link rel="icon" type="image/svg+xml" href="/static/img/icon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/chroma.css">
+
+  <!-- Scripts -->
+  <script src="/static/js/qrcode.min.js"></script>
+  <script src="/static/js/mermaid.min.js"></script>
+  <script src="/static/js/app.js" defer></script>
+</head>
+<body>
+  <!-- Header Principal Minimalista -->
+  <header class="app-header">
+    <div class="header-left">
+      <button id="sidebar-toggle-btn" class="btn-icon" title="Alternar Menu Lateral (Ctrl+B / ⌘B)" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="9" y1="3" x2="9" y2="21"></line>
+        </svg>
+      </button>
+
+      <a href="/" class="header-brand">
+        <img src="/static/img/icon.svg" alt="Markdown Viewer Icon" class="brand-logo" width="24" height="24">
+        <span class="brand-name">Markdown Viewer</span>
+      </a>
+    </div>
+
+    <div class="header-actions">
+      <!-- Botão QR Code para acesso móvel -->
+      <button id="qrcode-btn" class="btn-icon" title="Acessar no Smartphone / Tablet via QR Code" aria-label="QR Code">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span class="btn-text">QR Code</span>
+      </button>
+
+      <!-- Alternador de Tema -->
+      <button id="theme-toggle" class="btn-icon" title="Alternar Modo Escuro / Claro" aria-label="Tema">
+        <span id="theme-icon">☀️</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Container Principal Full-Height 100vh -->
+  <div class="app-container">
+    <!-- Overlay Backdrop para Mobile/Tablets -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <!-- Barra Lateral Retrátil e Full-Height -->
+    <aside id="app-sidebar" class="app-sidebar">
+      <div class="sidebar-header">
+        <span>Explorador de Arquivos</span>
+      </div>
+      <nav class="sidebar-nav">
+        <ul class="file-tree">
+          {{template "tree-node" .FileTree}}
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Divisor Arrastável de Redimensionamento da Barra Lateral -->
+    <div id="sidebar-resizer" class="sidebar-resizer" title="Arraste para redimensionar o menu lateral" role="separator" aria-orientation="vertical"></div>
+
+    <!-- Área Principal de Leitura -->
+    <main class="app-content">
+      <div class="content-wrapper">
+        {{template "content" .}}
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal de Compartilhamento por QR Code -->
+  <div id="qrcode-modal" class="modal-overlay" data-lan-url="{{.LANURL}}" data-local-url="{{.LocalURL}}">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <img src="/static/img/icon.svg" width="20" height="20" alt="Icon">
+          <h3>Acesso no Smartphone</h3>
+        </div>
+        <button id="close-qrcode-modal" class="btn-close" aria-label="Fechar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-subtitle">Escaneie o código com a câmera do seu smartphone ou tablet conectado na mesma rede:</p>
+        <div id="qrcode-canvas" class="qrcode-box"></div>
+        <div class="url-copy-box">
+          <input type="text" id="share-url-input" readonly>
+          <button id="copy-url-btn" class="btn-secondary">Copiar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template Recursivo de Árvore de Arquivos -->
+  {{define "tree-node"}}
+    {{if .}}
+      {{if eq .Type "directory"}}
+        <li class="file-tree-item tree-dir">
+          {{if .Name}}
+            <div class="dir-title">
+              <span class="dir-arrow">▾</span>
+              <span class="dir-icon">📁</span>
+              <span class="dir-name">{{.Name}}</span>
+            </div>
+          {{end}}
+          <ul class="dir-children">
+            {{range .Children}}
+              {{template "tree-node" .}}
+            {{end}}
+          </ul>
+        </li>
+      {{else}}
+        {{if .IsMarkdown}}
+          <li class="file-tree-item tree-file">
+            <a href="/{{.RelativePath}}" class="file-link" title="{{.RelativePath}}">
+              <span class="file-icon">📄</span>
+              <span class="file-name">{{.Name}}</span>
+            </a>
+          </li>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+</body>
+</html>

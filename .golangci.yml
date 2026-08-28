@@ -1,0 +1,42 @@
+run:
+  timeout: 5m
+  tests: true
+  allow-parallel-runners: true
+
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gofmt
+    - goimports
+    - misspell
+    - unconvert
+    - revive
+    - whitespace
+
+linters-settings:
+  govet:
+    enable-all: true
+    disable:
+      - shadow
+      - fieldalignment
+  revive:
+    rules:
+      - name: exported
+        disabled: false
+      - name: package-comments
+        disabled: false
+  misspell:
+    locale: US
+
+issues:
+  exclude-dirs:
+    - vendor
+    - .git
+    - .agent
+  max-issues-per-linter: 0
+  max-same-issues: 0
