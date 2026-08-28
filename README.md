@@ -31,9 +31,9 @@ Construído em **Go 1.22+** com **Clean Architecture (Ports & Adapters)**, gera 
 
 | Recurso | Sintaxe / Descrição | Visual / Benefício |
 | :--- | :--- | :--- |
-| 🖱️ **Zero-Config & Duplo Clique** | Duplo clique no executável no Windows ou Linux | Abre servidor e navegador padrão instantaneamente |
+| 🖱️ **Zero-Config & Duplo Clique** | Duplo clique no executável no Windows ou Linux | Abre servidor local seguro (`127.0.0.1`) e navegador instantaneamente |
 | 📌 **GitHub Alerts (Admonitions)** | `> [!NOTE]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!WARNING]`, `> [!CAUTION]` | Caixas temáticas com ícones SVG oficiais e cores de destaque |
-| 📊 **Diagramas Mermaid.js** | ` ```mermaid ` (flowcharts, sequence, class, state) | Diagramas vetoriais SVG interativos com re-renderização em troca de tema |
+| 📊 **Diagramas Mermaid com Zoom/Pan** | ` ```mermaid ` com controles flutuantes (+ / - / ↺) | Diagramas vetoriais SVG interativos com Zoom suave e navegação por arrasto (*pan*) |
 | 🎨 **Syntax Highlighting (Chroma)** | ` ```go `, ` ```python `, ` ```ts `, etc. | Dezenas de linguagens coloridas com alto contraste e legibilidade |
 | 📋 **Botão de Cópia de Código** | Botão *Copiar* flutuante em blocos de código | Cópia com 1 clique para o clipboard com feedback "Copiado!" |
 | 📐 **Fórmulas Matemáticas & LaTeX** | Inline `$E=mc^2$` e em bloco `$$\int_0^1 f(x)dx$$` | Renderização matemática de alta definição via KaTeX |
@@ -41,10 +41,11 @@ Construído em **Go 1.22+** com **Clean Architecture (Ports & Adapters)**, gera 
 | 📖 **Listas de Definição** | `Termo\n: Definição do termo` | Tags semânticas `<dl>`, `<dt>`, `<dd>` estilizadas |
 | 🔤 **Tipografia Inteligente** | `---` $\rightarrow$ `—`, `--` $\rightarrow$ `–`, `...` $\rightarrow$ `…`, aspas curvas | Tipografia editorial moderna e refinada |
 | ↔️ **Menu Lateral Redimensionável** | Barra divisória arrastável (`180px` a `600px`) | Largura personalizada persistida no `localStorage` do navegador |
-| 📱 **QR Code com IP Local (LAN)** | Modal interativo no cabeçalho | Acesso direto de smartphones e tablets na mesma rede Wi-Fi |
+| 🔒 **Segurança Local por Padrão** | Escuta padrão estrita em loopback (`127.0.0.1`) | Sem exposição na rede corporativa ou botões desnecessários |
+| 📱 **QR Code Sob Demanda (`--lan`)** | Flag `--lan` habilita escuta `0.0.0.0` e QR Code | Acesso direto de smartphones e tablets na mesma rede Wi-Fi |
 | 🌓 **Dark / Light Mode** | Alternador no cabeçalho com detecção de OS | Paletas de cores refinadas com alternância instantânea |
 | 🧭 **Navegação Transparente** | Links relativos `[Guia](./docs/guia.md)` | Conversão automática em rotas web fluidas |
-| 🔒 **Segurança Nativa** | Proteção contra Path Traversal (`..` escapes) | Rejeição estrita a tentativas de leitura fora da raiz |
+| 🛡️ **Proteção Path Traversal** | Sanitização e bloqueio de `..` escapes | Rejeição estrita com 403 Forbidden a tentativas fora da raiz |
 
 ---
 
@@ -58,8 +59,11 @@ Baixe a versão mais recente para o seu sistema operacional na aba [Releases](..
 ### 2. Execução via Linha de Comando (CLI)
 
 ```bash
-# Executa servindo a pasta atual na porta padrão 8080 e abre o navegador
+# Executa servindo a pasta atual em loopback seguro (127.0.0.1:8080) e abre o navegador
 ./md_server
+
+# Habilita exposição na rede local (0.0.0.0) e ativa o botão de QR Code no cabeçalho
+./md_server --lan
 
 # Servindo uma pasta específica em outra porta sem abrir o navegador
 ./md_server --dir ./minha-documentacao --port 9090 --open=false
@@ -73,7 +77,8 @@ Baixe a versão mais recente para o seu sistema operacional na aba [Releases](..
 | Flag | Shorthand | Padrão | Descrição |
 | :--- | :--- | :--- | :--- |
 | `--dir` | `-d` | `.` | Diretório raiz local contendo os arquivos Markdown a serem servidos |
-| `--port` | `-p` | `8080` | Porta TCP para escuta HTTP (escuta em `0.0.0.0` para acesso LAN) |
+| `--port` | `-p` | `8080` | Porta TCP para escuta HTTP (aloca porta livre se ocupada) |
+| `--lan` | `-l` | `false` | Habilita escuta em todas as interfaces (`0.0.0.0`) e exibe o botão de QR Code |
 | `--open` | `-o` | `true` | Dispara automaticamente a abertura da URL no navegador padrão |
 | `--version` | `-v` | `false` | Exibe versão semântica, commit e data de compilação |
 

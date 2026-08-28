@@ -38,15 +38,15 @@
 
 ## 8. Flag de Segurança CLI `--lan` e QR Code Condicional
 
-- [ ] 8.1 Adicionar a flag `--lan` / `-l` (padrão: `false`) no CLI Cobra (`internal/adapters/in/cli/root.go`) e na entidade de configuração (`internal/core/domain/config.go`)
-- [ ] 8.2 Atualizar o adaptador de servidor HTTP (`internal/adapters/in/http/server.go`) para escuta padrão em `127.0.0.1:<port>` (modo seguro) e `0.0.0.0:<port>` apenas quando `ExposeLAN` for verdadeiro
-- [ ] 8.3 Atualizar `PageData` e `handleDocument` para propagar `ShowQRCode = ExposeLAN`, e atualizar o template `web/templates/base.html` para renderizar o botão de QR Code condicionalmente (`{{if .ShowQRCode}}`)
-- [ ] 8.4 Atualizar o banner de console no terminal (`cmd/md_server/main.go`) para exibir a URL LAN somente quando `--lan` estiver ativo
-- [ ] 8.5 Implementar e atualizar testes unitários e de integração em `internal/adapters/in/cli/cli_test.go`, `internal/adapters/in/http/server_test.go` e `cmd/md_server/main_test.go`
-- [ ] 8.6 Validar a barreira de cobertura global >= 80% (`make test-coverage`) e aprovação no `make check`
+- [x] 8.1 Adicionar a flag `--lan` / `-l` (padrão: `false`) no CLI Cobra (`internal/adapters/in/cli/root.go`) e na entidade de configuração (`internal/core/domain/config.go`)
+- [x] 8.2 Atualizar o adaptador de servidor HTTP (`internal/adapters/in/http/server.go`) para escuta padrão em `127.0.0.1:<port>` (modo seguro) e `0.0.0.0:<port>` apenas quando `ExposeLAN` for verdadeiro
+- [x] 8.3 Atualizar `PageData` e `handleDocument` para propagar `ShowQRCode = ExposeLAN`, e atualizar o template `web/templates/base.html` para renderizar o botão de QR Code condicionalmente (`{{if .ShowQRCode}}`)
+- [x] 8.4 Atualizar o banner de console no terminal (`cmd/md_server/main.go`) para exibir a URL LAN somente quando `--lan` estiver ativo
+- [x] 8.5 Implementar e atualizar testes unitários e de integração em `internal/adapters/in/cli/cli_test.go`, `internal/adapters/in/http/server_test.go` e `cmd/md_server/main_test.go`
+- [x] 8.6 Validar a barreira de cobertura global >= 80% (`make test-coverage`) e aprovação no `make check`
 
 ## 9. Interatividade Avançada de Diagramas (Zoom e Pan Mermaid)
 
-- [ ] 9.1 Implementar barra de ferramentas flutuante (+, -, ↺) e estilos CSS para controles de diagramas no `web/static/css/style.css`
-- [ ] 9.2 Implementar manipulador de Pan & Zoom com eventos de mouse/touch (`pointerdown`, `pointermove`, `wheel`) e limites de escala em `web/static/js/app.js`
-- [ ] 9.3 Integrar o reset e re-aplicação de Zoom/Pan durante alternância de tema no `web/static/js/app.js`
+- [x] 9.1 Implementar barra de ferramentas flutuante (+, -, ↺) e estilos CSS para controles de diagramas no `web/static/css/style.css`
+- [x] 9.2 Implementar manipulador de Pan & Zoom com eventos de mouse/touch (`pointerdown`, `pointermove`, `wheel`) e limites de escala em `web/static/js/app.js`
+- [x] 9.3 Integrar o reset e re-aplicação de Zoom/Pan durante alternância de tema no `web/static/js/app.js`
