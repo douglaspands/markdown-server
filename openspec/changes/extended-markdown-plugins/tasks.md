@@ -65,6 +65,6 @@
 
 ## 12. Substituição pelo Motor Canônico de QR Code (ISO/IEC 18004)
 
-- [ ] 12.1 Integrar o motor canônico oficial completo de QR Code ISO/IEC 18004 com codificação Reed-Solomon e SVG vetorial em `web/static/js/qrcode.min.js`
-- [ ] 12.2 Validar a decodificação matemática e geração correta da matriz no frontend
-- [ ] 12.3 Executar validação de qualidade `make check` e compilação multiplataforma `make build-all`
+- [x] 12.1 Integrar o motor canônico oficial completo de QR Code ISO/IEC 18004 com codificação Reed-Solomon e SVG vetorial em `web/static/js/qrcode.min.js`
+- [x] 12.2 Validar a decodificação matemática e geração correta da matriz no frontend
+- [x] 12.3 Executar validação de qualidade `make check` e compilação multiplataforma `make build-all`
