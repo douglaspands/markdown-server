@@ -68,3 +68,9 @@
 - [x] 12.1 Integrar o motor canônico oficial completo de QR Code ISO/IEC 18004 com codificação Reed-Solomon e SVG vetorial em `web/static/js/qrcode.min.js`
 - [x] 12.2 Validar a decodificação matemática e geração correta da matriz no frontend
 - [x] 12.3 Executar validação de qualidade `make check` e compilação multiplataforma `make build-all`
+
+## 13. Adaptação Responsiva do Título para Dispositivos Móveis ("MD Viewer")
+
+- [ ] 13.1 Atualizar template `web/templates/base.html` com elementos `.brand-full` ("Markdown Viewer") e `.brand-short` ("MD Viewer")
+- [ ] 13.2 Implementar regras CSS responsivas em `web/static/css/style.css` para alternância suave de visualização em `@media (max-width: 768px)`
+- [ ] 13.3 Validar a renderização com `make check` e `make test`

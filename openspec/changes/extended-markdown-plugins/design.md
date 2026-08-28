@@ -117,7 +117,26 @@ flowchart TD
   - Configurar renderização em **240x240 pixels** com nível de correção **`QRCode.CorrectLevel.M` (15%)**.
   - Garantir **Quiet Zone** (margem branca de contraste 21:1) de 1.25rem no container `.qrcode-box`, independente do Dark Mode.
   - Exibir o endereço IP e a porta em destaque visual para conexão manual alternativa.
-- **Justificativa**: Garante conformidade matemática estrita com o padrão universal de QR Code, resultando em decodificação instantânea (< 100ms) por qualquer smartphone sem adicionar dependências externas no Go.
+### 11. Adaptação Responsiva do Título para Dispositivos Móveis ("MD Viewer")
+- **Decisão**:
+  - Em `web/templates/base.html`, estruturar a marca no cabeçalho com suporte a variantes responsivas:
+    ```html
+    <a href="/" class="header-brand">
+      <img src="/static/img/icon.svg" alt="Markdown Viewer Icon" class="brand-logo" width="24" height="24">
+      <span class="brand-name">
+        <span class="brand-full">Markdown Viewer</span>
+        <span class="brand-short">MD Viewer</span>
+      </span>
+    </a>
+    ```
+  - Em `web/static/css/style.css`, configurar por padrão:
+    - `.brand-short { display: none; }`
+    - `.brand-full { display: inline; }`
+  - Na media query `@media (max-width: 768px)` (mobile e tablet):
+    - `.brand-full { display: none; }`
+    - `.brand-short { display: inline; font-size: 0.95rem; font-weight: 600; }`
+    - `.brand-logo { width: 22px; height: 22px; }`
+- **Justificativa**: Em telas estreitas de smartphones (ex: 360px–414px), a exibição de "Markdown Viewer" somada ao botão do menu lateral e aos botões de ação (Alternador de Tema, QR Code) ocupava largura excessiva, comprimindo o cabeçalho. A contração fluida para "MD Viewer" preserva a identidade visual da aplicação com ergonomia mobile impecável.
 
 ## Risks / Trade-offs
 

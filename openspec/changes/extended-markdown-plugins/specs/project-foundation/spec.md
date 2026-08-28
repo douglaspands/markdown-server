@@ -160,6 +160,21 @@ O sistema SHALL disponibilizar no cabeçalho da interface um botão que abre um 
 
 ---
 
+### Requirement: Layout Responsivo e Adaptação de Título para Dispositivos Móveis ("MD Viewer")
+O sistema SHALL adaptar dinamicamente o cabeçalho e os títulos da interface em telas menores ou dispositivos móveis ($\le 768\text{px}$), apresentando o nome da aplicação de forma compacta como **"MD Viewer"**, evitando sobreposição ou quebra de linha com os botões de ação e navegação.
+
+#### Scenario: Visualização do título compacto em telas móveis e smartphones
+- **GIVEN** que o usuário acessa a aplicação através de um smartphone ou navegador com largura de viewport $\le 768\text{px}$
+- **WHEN** o cabeçalho é renderizado
+- **THEN** o sistema SHALL exibir o título compacto da marca como "MD Viewer" ao lado do ícone, preservando espaço para o botão do menu lateral e os botões de ação (Tema, QR Code).
+
+#### Scenario: Visualização do título completo em desktops e telas amplas
+- **GIVEN** que o usuário acessa a aplicação em uma tela de desktop ou viewport $> 768\text{px}$
+- **WHEN** o cabeçalho é renderizado
+- **THEN** o sistema SHALL exibir o título completo da marca como "Markdown Viewer".
+
+---
+
 ### Requirement: Inicialização por Duplo Clique no Windows e CLI Multiplataforma
 O sistema SHALL suportar execução por duplo clique em ambientes Windows sem requisições de argumentos mantendo escuta local segura por padrão (`127.0.0.1`), e fornecer uma interface de linha de comando completa para Windows e Linux/AMD64 com suporte a parâmetros (`--dir`, `--port`, `--open`, `--lan`).
 
