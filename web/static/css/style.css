@@ -806,8 +806,8 @@ dd {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   width: 90%;
-  max-width: 380px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 400px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
 
@@ -848,13 +848,44 @@ dd {
   margin-bottom: 1.25rem;
 }
 
-.qrcode-box {
-  background-color: #ffffff;
-  padding: 1rem;
-  border-radius: 8px;
-  display: inline-block;
-  box-shadow: inset 0 0 0 1px #e2e8f0;
+.qrcode-wrapper {
+  display: flex;
+  justify-content: center;
   margin-bottom: 1.25rem;
+}
+
+.qrcode-box {
+  background-color: #ffffff !important;
+  padding: 1.25rem;
+  border-radius: 12px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), inset 0 0 0 1px #e2e8f0;
+}
+
+.qrcode-box img,
+.qrcode-box canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.url-copy-section {
+  text-align: left;
+  margin-top: 0.5rem;
+}
+
+.url-copy-label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .url-copy-box {
@@ -867,9 +898,10 @@ dd {
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
-  padding: 0.45rem 0.75rem;
+  padding: 0.48rem 0.75rem;
   border-radius: 6px;
   font-size: 0.85rem;
+  font-family: var(--font-mono);
   outline: none;
 }
 

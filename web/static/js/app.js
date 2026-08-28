@@ -206,12 +206,12 @@ function initQRCodeModal() {
     if (lanBaseURL && !lanBaseURL.includes("127.0.0.1") && !lanBaseURL.includes("localhost")) {
       try {
         const lanUrlObj = new URL(lanBaseURL);
-        shareURL = `${lanUrlObj.protocol}//${lanUrlObj.host}${window.location.pathname}${window.location.search}${window.location.hash}`;
+        shareURL = `${lanUrlObj.protocol}//${lanUrlObj.host}${window.location.pathname}`;
       } catch (err) {
-        shareURL = `${lanBaseURL.replace(/\/$/, "")}${window.location.pathname}${window.location.search}${window.location.hash}`;
+        shareURL = `${lanBaseURL.replace(/\/$/, "")}${window.location.pathname}`;
       }
     } else {
-      shareURL = window.location.href;
+      shareURL = `${window.location.origin}${window.location.pathname}`;
     }
 
     if (urlInput) urlInput.value = shareURL;
@@ -220,8 +220,11 @@ function initQRCodeModal() {
       qrContainer.innerHTML = "";
       new window.QRCode(qrContainer, {
         text: shareURL,
-        width: 190,
-        height: 190
+        width: 240,
+        height: 240,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: window.QRCode.CorrectLevel ? window.QRCode.CorrectLevel.M : 0
       });
     }
 

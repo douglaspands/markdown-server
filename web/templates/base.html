@@ -88,22 +88,27 @@
   </div>
 
   {{if .ShowQRCode}}
-  <!-- Modal de Compartilhamento por QR Code -->
+  <!-- Modal de Compartilhamento por QR Code com Alta Escaneabilidade -->
   <div id="qrcode-modal" class="modal-overlay" data-lan-url="{{.LANURL}}" data-local-url="{{.LocalURL}}">
     <div class="modal-card">
       <div class="modal-header">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <img src="/static/img/icon.svg" width="20" height="20" alt="Icon">
-          <h3>Acesso no Smartphone</h3>
+          <h3>Acesso no Smartphone / Tablet</h3>
         </div>
         <button id="close-qrcode-modal" class="btn-close" aria-label="Fechar">&times;</button>
       </div>
       <div class="modal-body">
-        <p class="modal-subtitle">Escaneie o código com a câmera do seu smartphone ou tablet conectado na mesma rede:</p>
-        <div id="qrcode-canvas" class="qrcode-box"></div>
-        <div class="url-copy-box">
-          <input type="text" id="share-url-input" readonly>
-          <button id="copy-url-btn" class="btn-secondary">Copiar</button>
+        <p class="modal-subtitle">Aponte a câmera do seu celular conectado na mesma rede Wi-Fi:</p>
+        <div class="qrcode-wrapper">
+          <div id="qrcode-canvas" class="qrcode-box"></div>
+        </div>
+        <div class="url-copy-section">
+          <label class="url-copy-label">Endereço de acesso na rede local:</label>
+          <div class="url-copy-box">
+            <input type="text" id="share-url-input" readonly>
+            <button id="copy-url-btn" class="btn-secondary">Copiar</button>
+          </div>
         </div>
       </div>
     </div>
