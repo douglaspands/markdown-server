@@ -61,4 +61,23 @@ func TestRunServer(t *testing.T) {
 		err := runServerWithContext(ctx, &cobra.Command{}, []string{}, cfg)
 		require.NoError(t, err)
 	})
+
+	t.Run("Given ExposeLAN enabled When runServerWithContext starts and cancels Then it prints LAN URL and executes cleanly", func(t *testing.T) {
+		tempDir := testutils.CreateTempDirWithFiles(t, map[string]string{
+			"README.md": "# Test LAN Expose",
+		})
+
+		cfg := domain.ServerConfig{
+			RootDir:         tempDir,
+			Port:            0,
+			AutoOpenBrowser: false,
+			ExposeLAN:       true,
+		}
+
+		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+		defer cancel()
+
+		err := runServerWithContext(ctx, &cobra.Command{}, []string{}, cfg)
+		require.NoError(t, err)
+	})
 }

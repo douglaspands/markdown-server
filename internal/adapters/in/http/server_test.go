@@ -104,7 +104,7 @@ func TestHTTPServer(t *testing.T) {
 		assert.Contains(t, rec.Body.String(), "<svg")
 	})
 
-	t.Run("Given GET / When requested for existing markdown Then it returns 200 and rendered HTML with sidebar resizer and LAN data", func(t *testing.T) {
+	t.Run("Given GET / with default ExposeLAN=false When requested Then QR Code button and modal are hidden", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
 
@@ -115,10 +115,44 @@ func TestHTTPServer(t *testing.T) {
 		assert.Contains(t, rec.Body.String(), "Titulo")
 		assert.Contains(t, rec.Body.String(), "Markdown Viewer")
 		assert.Contains(t, rec.Body.String(), `id="sidebar-resizer"`)
+		assert.NotContains(t, rec.Body.String(), `id="qrcode-btn"`)
+		assert.NotContains(t, rec.Body.String(), `id="qrcode-modal"`)
+	})
+
+	t.Run("Given server with ExposeLAN=true When requested Then QR Code button and modal are rendered", func(t *testing.T) {
+		lanCfg := domain.ServerConfig{
+			RootDir:         ".",
+			Port:            0,
+			AutoOpenBrowser: false,
+			ExposeLAN:       true,
+		}
+		lanServer, err := adapterhttp.NewServer(lanCfg, services.NewMarkdownService(&testutils.MockFileScanner{
+			SanitizePathFunc: func(p string) (string, error) { return p, nil },
+			ReadFileFunc: func(ctx context.Context, p string) ([]byte, error) {
+				return []byte("# Doc"), nil
+			},
+			ScanDirectoryFunc: func(ctx context.Context) (*domain.FileNode, error) {
+				return &domain.FileNode{Name: "root", Type: domain.NodeTypeDirectory}, nil
+			},
+		}, &testutils.MockMarkdownRenderer{
+			RenderHTMLFunc: func(ctx context.Context, md []byte, p string) (string, string, error) {
+				return "<h1>Doc</h1>", "Doc", nil
+			},
+		}), services.NewHealthCheckService(time.Now()))
+		require.NoError(t, err)
+
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+
+		lanServer.Handler().ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Contains(t, rec.Body.String(), `id="qrcode-btn"`)
+		assert.Contains(t, rec.Body.String(), `id="qrcode-modal"`)
 		assert.Contains(t, rec.Body.String(), `data-lan-url=`)
 	})
 
-	t.Run("Given GET /missing.md When requested Then it returns 404 with error template and LAN data", func(t *testing.T) {
+	t.Run("Given GET /missing.md When requested Then it returns 404 with error template", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/missing.md", nil)
 		rec := httptest.NewRecorder()
 
@@ -128,7 +162,6 @@ func TestHTTPServer(t *testing.T) {
 		assert.Contains(t, rec.Body.String(), "404")
 		assert.Contains(t, rec.Body.String(), "Documento Não Encontrado")
 		assert.Contains(t, rec.Body.String(), `id="sidebar-resizer"`)
-		assert.Contains(t, rec.Body.String(), `data-lan-url=`)
 	})
 
 	t.Run("Given GET with path escape attempt When requested Then it returns 403 Forbidden", func(t *testing.T) {
@@ -149,7 +182,7 @@ func TestHTTPServer(t *testing.T) {
 		assert.NotEmpty(t, server.URL())
 		assert.NotEmpty(t, server.LocalURL())
 		assert.NotEmpty(t, server.LANURL())
-		assert.NotEmpty(t, server.LANIP())
+		assert.Empty(t, server.LANIP()) // ExposeLAN is false by default
 		assert.True(t, server.Port() > 0)
 
 		err = server.Stop(context.Background())
