@@ -62,3 +62,9 @@
 - [x] 11.1 Aumentar a dimensão de renderização do QR Code para 240x240 pixels com `CorrectLevel.M` e normalização de URL em `web/static/js/app.js`
 - [x] 11.2 Estilizar a moldura branca de alto contraste (*quiet zone*), badge de IP/Porta e botões de ação em `web/static/css/style.css` e `web/templates/base.html`
 - [x] 11.3 Atualizar mockups e documentação no `README.md`
+
+## 12. Substituição pelo Motor Canônico de QR Code (ISO/IEC 18004)
+
+- [ ] 12.1 Integrar o motor canônico oficial completo de QR Code ISO/IEC 18004 com codificação Reed-Solomon e SVG vetorial em `web/static/js/qrcode.min.js`
+- [ ] 12.2 Validar a decodificação matemática e geração correta da matriz no frontend
+- [ ] 12.3 Executar validação de qualidade `make check` e compilação multiplataforma `make build-all`

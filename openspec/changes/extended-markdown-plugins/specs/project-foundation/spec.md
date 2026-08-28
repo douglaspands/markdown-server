@@ -133,6 +133,11 @@ O sistema SHALL disponibilizar no cabeçalho da interface um botão que abre um 
 - **WHEN** o QR Code é renderizado na tela
 - **THEN** o sistema SHALL exibir o código em tamanho ampliado (240x240 pixels) dentro de uma moldura branca isolada (*quiet zone*) com contraste máximo (21:1) e nível de correção de erros calibrado (`CorrectLevel.M`), assegurando reconhecimento óptico instantâneo pelas câmeras de smartphones.
 
+#### Scenario: Geração de matriz QR Code matematicamente válida (ISO/IEC 18004)
+- **GIVEN** que o QR Code precisa ser gerado para o endereço de rede local
+- **WHEN** a função de geração de código é executada
+- **THEN** o sistema SHALL gerar uma matriz de dados estritamente em conformidade com a especificação ISO/IEC 18004, com codificação de dados em modo byte/alfanumérico, cálculo de redundância Reed-Solomon e aplicação de máscara de avaliação (mask pattern), gerando um QR Code 100% válido decodificável por qualquer leitor óptico padrão.
+
 #### Scenario: Exibição em destaque do endereço IP para conexão direta
 - **GIVEN** que o usuário abriu o modal de QR Code
 - **WHEN** o modal é renderizado

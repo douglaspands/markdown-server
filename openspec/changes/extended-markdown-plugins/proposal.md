@@ -18,7 +18,7 @@ Além disso, diagramas complexos de arquitetura e fluxogramas extensos frequente
 - **Botão de Cópia em Blocos de Código (Code Copy Action)**: Inclusão de botão interativo e discreto de cópia para a área de transferência em todos os blocos de código formatados com feedback visual imediato.
 - **Zoom e Pan Interativo para Diagramas (Mermaid Navigation)**: Controles flutuantes de ampliação (+), redução (-), reset (↺) e navegação por clique e arraste (*drag-and-pan*) intuitivo em todos os diagramas Mermaid gerados, com suporte a roda do mouse (wheel/Ctrl+wheel) e toque móvel.
 - **Controle Seguro de Exposição de Rede Local (`--lan`)**: Inclusão da flag CLI `--lan` (shorthand `-l`, padrão `false`). Por padrão, o servidor escuta em `127.0.0.1` e o botão de QR Code fica oculto; ao passar `--lan`, o servidor escuta em `0.0.0.0`, exibe a URL LAN no console e habilita o botão de QR Code no cabeçalho.
-- **Otimização de Escaneabilidade de QR Code e Acesso Móvel**: Aprimoramento da captura de QR Code por câmeras de smartphones através de: (1) ampliação do tamanho para 240x240px com renderização vetorial nítida, (2) moldura branca dedicada (*quiet zone*) com contraste máximo 21:1 imune ao modo escuro, (3) nível de correção de erros calibrado (`CorrectLevel.M`) para absorver reflexos de monitores, (4) simplificação da URL canônica para reduzir a densidade da matriz, e (5) exibição em destaque do IP/Porta para conexão manual rápida.
+- **Motor Canônico de QR Code (Conformidade ISO/IEC 18004) e Acesso Móvel**: Substituição da implementação de QR Code por um motor canônico universal e matematicamente exato (com codificação Reed-Solomon autêntica, cálculo polinomial de correção de erros e máscaras de dados padrão ISO/IEC 18004), renderizado em 240x240px com moldura branca de alto contraste (*quiet zone 21:1*), nível de correção `CorrectLevel.M` (15%) e badge de IP para digitação manual, garantindo que qualquer câmera de smartphone (iOS, Android, Google Lens) decodifique o endereço instantaneamente.
 - **Documentação Visual com Prints de Tela (README.md)**: Atualização do `README.md` com prévias visuais em alta definição e mockups de tela (com dados fictícios ilustrativos) apresentando a interface do Markdown Viewer, suporte a temas (Dark/Light), alertas GitHub, diagramas Mermaid com controles de zoom, fórmulas e menu lateral redimensionável.
 
 ## Capabilities
@@ -27,7 +27,7 @@ Além disso, diagramas complexos de arquitetura e fluxogramas extensos frequente
 <!-- Nenhuma nova capacidade raiz necessária; expande os requisitos existentes de fundação e renderização -->
 
 ### Modified Capabilities
-- `project-foundation`: Modifica e expande os requisitos de renderização Markdown para incluir GitHub Alerts/Callouts, Notas de Rodapé (Footnotes), Fórmulas Matemáticas KaTeX, Listas de Definição, Tipografia Inteligente, stack tipográfica moderna para leitura e código-fonte/scripts, Emojis, Botão de Cópia em blocos de código, controles de Zoom e Pan em diagramas Mermaid, flag de controle seguro de exposição de rede local (`--lan`) com ativação condicional do QR Code, otimização de escaneabilidade do QR Code e prévias visuais no README.
+- `project-foundation`: Modifica e expande os requisitos de renderização Markdown para incluir GitHub Alerts/Callouts, Notas de Rodapé (Footnotes), Fórmulas Matemáticas KaTeX, Listas de Definição, Tipografia Inteligente, stack tipográfica moderna para leitura e código-fonte/scripts, Emojis, Botão de Cópia em blocos de código, controles de Zoom e Pan em diagramas Mermaid, flag de controle seguro de exposição de rede local (`--lan`) com ativação condicional do QR Code, motor canônico de QR Code ISO/IEC 18004 de alta escaneabilidade e prévias visuais no README.
 
 ## Impact
 
@@ -38,6 +38,7 @@ Além disso, diagramas complexos de arquitetura e fluxogramas extensos frequente
   - `cmd/md_server/main.go`: Exibição de URL LAN no banner apenas quando `--lan` for habilitado.
   - `internal/adapters/out/renderer/goldmark.go`: Extensões Goldmark e GitHub Alerts.
 - **Frontend (HTML/CSS/JS)**:
+  - `web/static/js/qrcode.min.js`: Motor canônico standalone autêntico baseado na especificação ISO/IEC 18004 com Reed-Solomon e SVG nativo.
   - `web/templates/base.html`: Renderização condicional do botão de QR Code (`{{if .ShowQRCode}}`) e layout otimizado do modal de compartilhamento.
   - `web/static/css/style.css`: Moldura de alto contraste (*quiet zone*) para o container do QR Code (`.qrcode-box`), badge de IP legível e estilos de botões.
   - `web/static/js/app.js`: Geração do QR Code em 240x240px com `CorrectLevel.M`, normalização de URL simplificada e manipulador de cópia rápida.
