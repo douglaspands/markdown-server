@@ -54,13 +54,14 @@ func runServerWithContext(ctx context.Context, cmd *cobra.Command, args []string
 	}
 
 	localURL := server.LocalURL()
-	lanURL := server.LANURL()
 	fmt.Println("=================================================================")
 	fmt.Println(" " + version.Formatted("md_server"))
 	fmt.Println("=================================================================")
 	fmt.Printf(" Servindo diretório : %s\n", cfg.RootDir)
 	fmt.Printf(" Local              : %s\n", localURL)
-	fmt.Printf(" Rede Local (LAN)   : %s\n", lanURL)
+	if cfg.ExposeLAN {
+		fmt.Printf(" Rede Local (LAN)   : %s\n", server.LANURL())
+	}
 	fmt.Println(" Pressione Ctrl+C para encerrar o servidor.")
 	fmt.Println("=================================================================")
 

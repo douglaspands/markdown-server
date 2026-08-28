@@ -10,4 +10,7 @@ type ServerConfig struct {
 
 	// AutoOpenBrowser indica se o navegador padrão do sistema operacional deve ser aberto na inicialização.
 	AutoOpenBrowser bool
+
+	// ExposeLAN indica se o servidor deve escutar em 0.0.0.0 e expor o QR Code para a rede local (padrão: false / escuta em 127.0.0.1).
+	ExposeLAN bool
 }

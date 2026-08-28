@@ -106,6 +106,86 @@ func TestGoldmarkRenderer(t *testing.T) {
 		assert.Contains(t, html, "plain text content")
 	})
 
+	t.Run("Given GitHub Alerts When RenderHTML is called Then alerts are converted to styled containers with SVG icons", func(t *testing.T) {
+		md := []byte(`
+> [!NOTE]
+> Este é um aviso informativo.
+
+> [!TIP]
+> Esta é uma dica de uso.
+
+> [!IMPORTANT]
+> Esta é uma informação crucial.
+
+> [!WARNING]
+> Este é um aviso de atenção.
+
+> [!CAUTION]
+> Esta é uma ação de risco.
+`)
+		html, _, err := r.RenderHTML(ctx, md, "alerts.md")
+
+		require.NoError(t, err)
+		assert.Contains(t, html, `markdown-alert markdown-alert-note`)
+		assert.Contains(t, html, `octicon-info`)
+		assert.Contains(t, html, `Note`)
+		assert.Contains(t, html, `Este é um aviso informativo.`)
+
+		assert.Contains(t, html, `markdown-alert markdown-alert-tip`)
+		assert.Contains(t, html, `octicon-light-bulb`)
+		assert.Contains(t, html, `Tip`)
+
+		assert.Contains(t, html, `markdown-alert markdown-alert-important`)
+		assert.Contains(t, html, `octicon-report`)
+		assert.Contains(t, html, `Important`)
+
+		assert.Contains(t, html, `markdown-alert markdown-alert-warning`)
+		assert.Contains(t, html, `octicon-alert`)
+		assert.Contains(t, html, `Warning`)
+
+		assert.Contains(t, html, `markdown-alert markdown-alert-caution`)
+		assert.Contains(t, html, `octicon-stop`)
+		assert.Contains(t, html, `Caution`)
+	})
+
+	t.Run("Given Footnotes When RenderHTML is called Then footnote references and definitions are rendered", func(t *testing.T) {
+		md := []byte("Texto com nota de rodapé[^1].\n\n[^1]: Conteúdo explicativo da nota.")
+		html, _, err := r.RenderHTML(ctx, md, "footnotes.md")
+
+		require.NoError(t, err)
+		assert.Contains(t, html, `footnote-ref`)
+		assert.Contains(t, html, `footnotes`)
+		assert.Contains(t, html, `Conteúdo explicativo da nota.`)
+	})
+
+	t.Run("Given Definition Lists When RenderHTML is called Then dl, dt, dd tags are rendered", func(t *testing.T) {
+		md := []byte("Termo 1\n: Definição do termo 1\n\nTermo 2\n: Definição do termo 2")
+		html, _, err := r.RenderHTML(ctx, md, "deflist.md")
+
+		require.NoError(t, err)
+		assert.Contains(t, html, `<dl>`)
+		assert.Contains(t, html, `<dt>Termo 1</dt>`)
+		assert.Contains(t, html, `<dd>Definição do termo 1</dd>`)
+	})
+
+	t.Run("Given Typographer syntax When RenderHTML is called Then smart punctuation is produced", func(t *testing.T) {
+		md := []byte(`Texto com traço --- e reticências...`)
+		html, _, err := r.RenderHTML(ctx, md, "typographer.md")
+
+		require.NoError(t, err)
+		assert.Contains(t, html, "&mdash;")  // em-dash entity
+		assert.Contains(t, html, "&hellip;") // ellipsis entity
+	})
+
+	t.Run("Given Math equations When RenderHTML is called Then equations are preserved for client-side rendering", func(t *testing.T) {
+		md := []byte("Equação inline $E=mc^2$ e bloco $$\n\\sum_{i=1}^n x_i\n$$")
+		html, _, err := r.RenderHTML(ctx, md, "math.md")
+
+		require.NoError(t, err)
+		assert.Contains(t, html, "$E=mc^2$")
+		assert.Contains(t, html, "$$\n\\sum_{i=1}^n x_i\n$$")
+	})
+
 	t.Run("Given a cancelled context When RenderHTML is called Then it returns context error", func(t *testing.T) {
 		cancelCtx, cancel := context.WithCancel(context.Background())
 		cancel()

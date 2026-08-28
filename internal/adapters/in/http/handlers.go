@@ -10,11 +10,12 @@ import (
 
 // PageData estrutura os dados passados para renderização dos templates HTML.
 type PageData struct {
-	Document *domain.MarkdownDocument
-	FileTree *domain.FileNode
-	Error    string
-	LocalURL string
-	LANURL   string
+	Document   *domain.MarkdownDocument
+	FileTree   *domain.FileNode
+	Error      string
+	LocalURL   string
+	LANURL     string
+	ShowQRCode bool
 }
 
 func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
@@ -36,6 +37,7 @@ func (s *Server) handleDocument(w http.ResponseWriter, r *http.Request) {
 	fileTree, _ := s.mdService.GetFileTree(ctx)
 	localURL := s.LocalURL()
 	lanURL := s.LANURL()
+	showQRCode := s.config.ExposeLAN
 
 	doc, err := s.mdService.GetDocument(ctx, reqPath)
 	if err != nil {
@@ -48,10 +50,11 @@ func (s *Server) handleDocument(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.WriteHeader(http.StatusNotFound)
 		_ = s.err404Tmpl.Execute(w, PageData{
-			FileTree: fileTree,
-			Error:    "Documento não encontrado",
-			LocalURL: localURL,
-			LANURL:   lanURL,
+			FileTree:   fileTree,
+			Error:      "Documento não encontrado",
+			LocalURL:   localURL,
+			LANURL:     lanURL,
+			ShowQRCode: showQRCode,
 		})
 		return
 	}
@@ -59,9 +62,10 @@ func (s *Server) handleDocument(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_ = s.tmpl.Execute(w, PageData{
-		Document: doc,
-		FileTree: fileTree,
-		LocalURL: localURL,
-		LANURL:   lanURL,
+		Document:   doc,
+		FileTree:   fileTree,
+		LocalURL:   localURL,
+		LANURL:     lanURL,
+		ShowQRCode: showQRCode,
 	})
 }

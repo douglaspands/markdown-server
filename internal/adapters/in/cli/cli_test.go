@@ -29,9 +29,10 @@ func TestCLI(t *testing.T) {
 		assert.Equal(t, ".", receivedCfg.RootDir)
 		assert.Equal(t, 8080, receivedCfg.Port)
 		assert.True(t, receivedCfg.AutoOpenBrowser)
+		assert.False(t, receivedCfg.ExposeLAN)
 	})
 
-	t.Run("Given custom flags When root command is executed Then runner receives custom config", func(t *testing.T) {
+	t.Run("Given custom flags including --lan When root command is executed Then runner receives custom config", func(t *testing.T) {
 		var receivedCfg domain.ServerConfig
 		runner := func(cmd *cobra.Command, args []string, cfg domain.ServerConfig) error {
 			receivedCfg = cfg
@@ -39,7 +40,7 @@ func TestCLI(t *testing.T) {
 		}
 
 		cmd := cli.NewRootCommand(runner)
-		cmd.SetArgs([]string{"--dir", "/tmp/docs", "--port", "9090", "--open=false"})
+		cmd.SetArgs([]string{"--dir", "/tmp/docs", "--port", "9090", "--open=false", "--lan"})
 
 		err := cmd.Execute()
 		require.NoError(t, err)
@@ -47,6 +48,7 @@ func TestCLI(t *testing.T) {
 		assert.Equal(t, "/tmp/docs", receivedCfg.RootDir)
 		assert.Equal(t, 9090, receivedCfg.Port)
 		assert.False(t, receivedCfg.AutoOpenBrowser)
+		assert.True(t, receivedCfg.ExposeLAN)
 	})
 
 	t.Run("Given a positional path argument When executed Then rootDir is updated", func(t *testing.T) {

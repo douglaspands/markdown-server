@@ -19,6 +19,7 @@ func NewRootCommand(runner RunnerFunc) *cobra.Command {
 		rootDir     string
 		port        int
 		autoOpen    bool
+		exposeLAN   bool
 		showVersion bool
 	)
 
@@ -44,6 +45,7 @@ Suporta duplo clique no Windows com abertura automática do navegador padrão.`,
 				RootDir:         rootDir,
 				Port:            port,
 				AutoOpenBrowser: autoOpen,
+				ExposeLAN:       exposeLAN,
 			}
 
 			if runner != nil {
@@ -56,6 +58,7 @@ Suporta duplo clique no Windows com abertura automática do navegador padrão.`,
 	rootCmd.Flags().StringVarP(&rootDir, "dir", "d", ".", "Diretório raiz contendo os arquivos Markdown a serem servidos")
 	rootCmd.Flags().IntVarP(&port, "port", "p", 8080, "Porta TCP para o servidor HTTP")
 	rootCmd.Flags().BoolVarP(&autoOpen, "open", "o", true, "Abre automaticamente o navegador padrão do sistema operacional")
+	rootCmd.Flags().BoolVarP(&exposeLAN, "lan", "l", false, "Habilita escuta em todas as interfaces de rede local (0.0.0.0) e exibe o QR Code")
 	rootCmd.Flags().BoolVarP(&showVersion, "version", "v", false, "Exibe os metadados de versão da aplicação")
 
 	rootCmd.AddCommand(NewVersionCommand())

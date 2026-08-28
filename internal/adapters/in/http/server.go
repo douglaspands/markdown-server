@@ -47,12 +47,21 @@ func NewServer(cfg domain.ServerConfig, mdService ports.MarkdownServicePort, hea
 		return nil, fmt.Errorf("falha ao compilar template 404: %w", err)
 	}
 
-	lanIP := DetectLANIP()
-	addr := fmt.Sprintf("0.0.0.0:%d", cfg.Port)
+	var bindHost string
+	var lanIP string
+	if cfg.ExposeLAN {
+		bindHost = "0.0.0.0"
+		lanIP = DetectLANIP()
+	} else {
+		bindHost = "127.0.0.1"
+		lanIP = ""
+	}
+
+	addr := fmt.Sprintf("%s:%d", bindHost, cfg.Port)
 	listener, err := net.Listen("tcp", addr)
 	if err != nil {
-		// Se a porta estiver ocupada, tenta alocar em qualquer porta disponível em todas as interfaces
-		listener, err = net.Listen("tcp", "0.0.0.0:0")
+		// Se a porta estiver ocupada, tenta alocar em qualquer porta disponível na mesma interface
+		listener, err = net.Listen("tcp", fmt.Sprintf("%s:0", bindHost))
 		if err != nil {
 			return nil, fmt.Errorf("não foi possível abrir porta TCP: %w", err)
 		}
@@ -165,6 +174,9 @@ func (s *Server) LocalURL() string {
 func (s *Server) LANURL() string {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
+	if s.lanIP == "" {
+		return s.LocalURL()
+	}
 	return fmt.Sprintf("http://%s:%d", s.lanIP, s.config.Port)
 }
 

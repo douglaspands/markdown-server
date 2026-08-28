@@ -12,10 +12,13 @@
   <!-- Estilos -->
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="stylesheet" href="/static/css/chroma.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" crossorigin="anonymous">
 
   <!-- Scripts -->
   <script src="/static/js/qrcode.min.js"></script>
   <script src="/static/js/mermaid.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
   <script src="/static/js/app.js" defer></script>
 </head>
 <body>
@@ -31,11 +34,15 @@
 
       <a href="/" class="header-brand">
         <img src="/static/img/icon.svg" alt="Markdown Viewer Icon" class="brand-logo" width="24" height="24">
-        <span class="brand-name">Markdown Viewer</span>
+        <span class="brand-name">
+          <span class="brand-full">Markdown Viewer</span>
+          <span class="brand-short">MD Viewer</span>
+        </span>
       </a>
     </div>
 
     <div class="header-actions">
+      {{if .ShowQRCode}}
       <!-- Botão QR Code para acesso móvel -->
       <button id="qrcode-btn" class="btn-icon" title="Acessar no Smartphone / Tablet via QR Code" aria-label="QR Code">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -46,6 +53,7 @@
         </svg>
         <span class="btn-text">QR Code</span>
       </button>
+      {{end}}
 
       <!-- Alternador de Tema -->
       <button id="theme-toggle" class="btn-icon" title="Alternar Modo Escuro / Claro" aria-label="Tema">
@@ -82,26 +90,33 @@
     </main>
   </div>
 
-  <!-- Modal de Compartilhamento por QR Code -->
+  {{if .ShowQRCode}}
+  <!-- Modal de Compartilhamento por QR Code com Alta Escaneabilidade -->
   <div id="qrcode-modal" class="modal-overlay" data-lan-url="{{.LANURL}}" data-local-url="{{.LocalURL}}">
     <div class="modal-card">
       <div class="modal-header">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <img src="/static/img/icon.svg" width="20" height="20" alt="Icon">
-          <h3>Acesso no Smartphone</h3>
+          <h3>Acesso no Smartphone / Tablet</h3>
         </div>
         <button id="close-qrcode-modal" class="btn-close" aria-label="Fechar">&times;</button>
       </div>
       <div class="modal-body">
-        <p class="modal-subtitle">Escaneie o código com a câmera do seu smartphone ou tablet conectado na mesma rede:</p>
-        <div id="qrcode-canvas" class="qrcode-box"></div>
-        <div class="url-copy-box">
-          <input type="text" id="share-url-input" readonly>
-          <button id="copy-url-btn" class="btn-secondary">Copiar</button>
+        <p class="modal-subtitle">Aponte a câmera do seu celular conectado na mesma rede Wi-Fi:</p>
+        <div class="qrcode-wrapper">
+          <div id="qrcode-canvas" class="qrcode-box"></div>
+        </div>
+        <div class="url-copy-section">
+          <label class="url-copy-label">Endereço de acesso na rede local:</label>
+          <div class="url-copy-box">
+            <input type="text" id="share-url-input" readonly>
+            <button id="copy-url-btn" class="btn-secondary">Copiar</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
+  {{end}}
 
   <!-- Template Recursivo de Árvore de Arquivos -->
   {{define "tree-node"}}

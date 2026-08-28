@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initSidebarResizer();
   initQRCodeModal();
   initMermaid();
+  initCodeCopyButtons();
+  initMathEquations();
   initActiveTreeLink();
 });
 
@@ -204,12 +206,12 @@ function initQRCodeModal() {
     if (lanBaseURL && !lanBaseURL.includes("127.0.0.1") && !lanBaseURL.includes("localhost")) {
       try {
         const lanUrlObj = new URL(lanBaseURL);
-        shareURL = `${lanUrlObj.protocol}//${lanUrlObj.host}${window.location.pathname}${window.location.search}${window.location.hash}`;
+        shareURL = `${lanUrlObj.protocol}//${lanUrlObj.host}${window.location.pathname}`;
       } catch (err) {
-        shareURL = `${lanBaseURL.replace(/\/$/, "")}${window.location.pathname}${window.location.search}${window.location.hash}`;
+        shareURL = `${lanBaseURL.replace(/\/$/, "")}${window.location.pathname}`;
       }
     } else {
-      shareURL = window.location.href;
+      shareURL = `${window.location.origin}${window.location.pathname}`;
     }
 
     if (urlInput) urlInput.value = shareURL;
@@ -218,8 +220,11 @@ function initQRCodeModal() {
       qrContainer.innerHTML = "";
       new window.QRCode(qrContainer, {
         text: shareURL,
-        width: 190,
-        height: 190
+        width: 240,
+        height: 240,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: window.QRCode.CorrectLevel ? window.QRCode.CorrectLevel.M : 0
       });
     }
 
@@ -305,6 +310,10 @@ async function renderMermaidDiagrams(theme) {
         const { svg } = await window.mermaid.render(containerId, rawCode);
         el.innerHTML = svg;
         el.classList.remove("mermaid-error");
+        const svgEl = el.querySelector("svg");
+        if (svgEl) {
+          attachMermaidPanZoom(el, svgEl);
+        }
       } catch (renderErr) {
         console.warn(`Erro de sintaxe no diagrama Mermaid #${i}:`, renderErr);
         el.classList.add("mermaid-error");
@@ -327,6 +336,103 @@ async function renderMermaidDiagrams(theme) {
   }
 }
 
+/**
+ * Gerenciador nativo e fluido de Pan & Zoom para diagramas Mermaid (SVG)
+ */
+function attachMermaidPanZoom(container, svgEl) {
+  if (!container || !svgEl) return;
+
+  // Remove toolbar anterior se já existir
+  const oldToolbar = container.querySelector(".mermaid-toolbar");
+  if (oldToolbar) oldToolbar.remove();
+
+  // Cria a toolbar flutuante
+  const toolbar = document.createElement("div");
+  toolbar.className = "mermaid-toolbar";
+  toolbar.innerHTML = `
+    <button class="mermaid-tool-btn" data-action="zoom-in" title="Aumentar Zoom (+)" aria-label="Aumentar Zoom">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+    </button>
+    <button class="mermaid-tool-btn" data-action="zoom-out" title="Diminuir Zoom (-)" aria-label="Diminuir Zoom">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+    </button>
+    <button class="mermaid-tool-btn" data-action="reset" title="Redefinir Zoom (100%)" aria-label="Redefinir">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+    </button>
+  `;
+  container.appendChild(toolbar);
+
+  let scale = 1.0;
+  let translateX = 0;
+  let translateY = 0;
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+
+  function updateTransform() {
+    svgEl.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  }
+
+  // Controles de zoom da toolbar
+  toolbar.querySelector('[data-action="zoom-in"]').addEventListener("click", (e) => {
+    e.stopPropagation();
+    scale = Math.min(5.0, scale * 1.25);
+    updateTransform();
+  });
+
+  toolbar.querySelector('[data-action="zoom-out"]').addEventListener("click", (e) => {
+    e.stopPropagation();
+    scale = Math.max(0.4, scale / 1.25);
+    updateTransform();
+  });
+
+  toolbar.querySelector('[data-action="reset"]').addEventListener("click", (e) => {
+    e.stopPropagation();
+    scale = 1.0;
+    translateX = 0;
+    translateY = 0;
+    updateTransform();
+  });
+
+  // Zoom suave com roda do mouse sobre o container
+  container.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 1.15 : 0.87;
+    scale = Math.max(0.4, Math.min(5.0, scale * delta));
+    updateTransform();
+  }, { passive: false });
+
+  // Pan por clique e arraste com Pointer Events
+  container.addEventListener("pointerdown", (e) => {
+    if (e.target.closest(".mermaid-toolbar")) return;
+    isDragging = true;
+    startX = e.clientX - translateX;
+    startY = e.clientY - translateY;
+    container.classList.add("is-panning");
+    container.setPointerCapture(e.pointerId);
+  });
+
+  container.addEventListener("pointermove", (e) => {
+    if (!isDragging) return;
+    translateX = e.clientX - startX;
+    translateY = e.clientY - startY;
+    updateTransform();
+  });
+
+  const endDrag = (e) => {
+    if (isDragging) {
+      isDragging = false;
+      container.classList.remove("is-panning");
+      try {
+        container.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+    }
+  };
+
+  container.addEventListener("pointerup", endDrag);
+  container.addEventListener("pointercancel", endDrag);
+}
+
 function escapeHTML(str) {
   return str
     .replace(/&/g, "&amp;")
@@ -337,7 +443,77 @@ function escapeHTML(str) {
 }
 
 /* =========================================================================
-   5. Destaque do Link Ativo na Árvore de Arquivos
+   6. Botão de Cópia em Blocos de Código (Copy Code Button)
+   ========================================================================= */
+function initCodeCopyButtons() {
+  const codeBlocks = document.querySelectorAll(".highlight, pre:not(.mermaid-error-code)");
+
+  codeBlocks.forEach((block) => {
+    // Evita duplicar o botão se já foi injetado
+    if (block.querySelector(".copy-code-btn") || block.classList.contains("mermaid")) return;
+
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy-code-btn";
+    copyBtn.type = "button";
+    copyBtn.setAttribute("aria-label", "Copiar código");
+    copyBtn.textContent = "Copiar";
+
+    copyBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const codeEl = block.querySelector("code") || block;
+      const textToCopy = codeEl.innerText || codeEl.textContent;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        copyBtn.textContent = "Copiado!";
+        copyBtn.classList.add("copied");
+
+        setTimeout(() => {
+          copyBtn.textContent = "Copiar";
+          copyBtn.classList.remove("copied");
+        }, 1800);
+      }).catch((err) => {
+        console.warn("Falha ao copiar código:", err);
+      });
+    });
+
+    block.appendChild(copyBtn);
+  });
+}
+
+/* =========================================================================
+   7. Renderização Automática de Fórmulas Matemáticas LaTeX (KaTeX)
+   ========================================================================= */
+function initMathEquations() {
+  const content = document.querySelector(".markdown-body");
+  if (!content) return;
+
+  function renderMath() {
+    if (typeof renderMathInElement === "function") {
+      try {
+        renderMathInElement(content, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\(", right: "\\)", display: false },
+            { left: "\\[", right: "\\]", display: true }
+          ],
+          throwOnError: false
+        });
+      } catch (err) {
+        console.warn("Erro ao processar fórmulas KaTeX:", err);
+      }
+    }
+  }
+
+  if (typeof renderMathInElement === "function") {
+    renderMath();
+  } else {
+    window.addEventListener("load", renderMath);
+  }
+}
+
+/* =========================================================================
+   8. Destaque do Link Ativo na Árvore de Arquivos
    ========================================================================= */
 function initActiveTreeLink() {
   const currentPath = window.location.pathname;

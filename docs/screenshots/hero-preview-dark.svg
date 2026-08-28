@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" width="1000" height="620" style="background:#0d1117; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Window Frame -->
+  <rect x="20" y="20" width="960" height="580" rx="10" fill="#0d1117" stroke="#30363d" stroke-width="1" filter="url(#shadow)"/>
+
+  <!-- Top App Header -->
+  <rect x="20" y="20" width="960" height="48" rx="10" fill="#161b22"/>
+  <rect x="20" y="58" width="960" height="10" fill="#161b22"/>
+  <line x1="20" y1="68" x2="980" y2="68" stroke="#30363d" stroke-width="1"/>
+
+  <!-- Window Controls / Logo -->
+  <circle cx="45" cy="44" r="6" fill="#ff5f56"/>
+  <circle cx="65" cy="44" r="6" fill="#ffbd2e"/>
+  <circle cx="85" cy="44" r="6" fill="#27c93f"/>
+
+  <!-- Brand Title -->
+  <g transform="translate(120, 32)">
+    <rect x="0" y="2" width="20" height="20" rx="4" fill="#58a6ff"/>
+    <path d="M4 16 L4 8 L7 12 L10 8 L10 16" fill="none" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 12 L14 14 L16 12 M14 8 L14 14" fill="none" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="28" y="17" fill="#e6edf3" font-size="14" font-weight="600">Markdown Viewer</text>
+  </g>
+
+  <!-- Header Right Actions (QR Code, Theme Toggle) -->
+  <g transform="translate(820, 32)">
+    <rect x="0" y="0" width="85" height="24" rx="4" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+    <text x="10" y="16" fill="#c9d1d9" font-size="11" font-weight="500">📱 QR Code</text>
+    <rect x="95" y="0" width="28" height="24" rx="4" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+    <text x="103" y="16" fill="#c9d1d9" font-size="12">🌙</text>
+  </g>
+
+  <!-- Sidebar -->
+  <rect x="20" y="69" width="240" height="531" fill="#161b22"/>
+  
+  <!-- Sidebar Tree Items -->
+  <text x="40" y="100" fill="#8b949e" font-size="11" font-weight="600" letter-spacing="0.5">EXPLORADOR DE ARQUIVOS</text>
+  
+  <!-- Active Item: README.md -->
+  <rect x="30" y="115" width="220" height="28" rx="5" fill="#1f6feb" fill-opacity="0.15"/>
+  <text x="45" y="133" fill="#58a6ff" font-size="13">📄 README.md</text>
+
+  <!-- Subfolder: docs -->
+  <text x="45" y="165" fill="#c9d1d9" font-size="13">📁 docs/</text>
+  <text x="65" y="195" fill="#8b949e" font-size="13">📄 architecture.md</text>
+  <text x="65" y="225" fill="#8b949e" font-size="13">📄 api-reference.md</text>
+  <text x="65" y="255" fill="#8b949e" font-size="13">📄 benchmarks.md</text>
+  
+  <!-- Other files -->
+  <text x="45" y="285" fill="#8b949e" font-size="13">📄 CHANGELOG.md</text>
+  <text x="45" y="315" fill="#8b949e" font-size="13">📄 CONTRIBUTING.md</text>
+
+  <!-- Resizer Splitter Line -->
+  <line x1="260" y1="69" x2="260" y2="600" stroke="#30363d" stroke-width="2"/>
+  <rect x="257" y="300" width="6" height="30" rx="3" fill="#58a6ff" opacity="0.6"/>
+
+  <!-- Main Content Area -->
+  <g transform="translate(290, 95)">
+    <!-- Document Title -->
+    <text x="0" y="25" fill="#e6edf3" font-size="22" font-weight="700">🚀 Sistema Nexus Core - Manual de Arquitetura</text>
+    <line x1="0" y1="40" x2="650" y2="40" stroke="#30363d" stroke-width="1"/>
+
+    <!-- GitHub Alert: Note -->
+    <g transform="translate(0, 55)">
+      <rect x="0" y="0" width="650" height="50" rx="6" fill="#2f81f7" fill-opacity="0.1" stroke="#2f81f7" stroke-width="1" stroke-dasharray="0"/>
+      <rect x="0" y="0" width="4" height="50" fill="#2f81f7"/>
+      <text x="15" y="20" fill="#2f81f7" font-size="12" font-weight="600">ℹ️ Note</text>
+      <text x="15" y="38" fill="#e6edf3" font-size="12">Ambiente de microserviços escalável com persistência distribuída e renderização ultrarrápida.</text>
+    </g>
+
+    <!-- GitHub Alert: Tip -->
+    <g transform="translate(0, 115)">
+      <rect x="0" y="0" width="650" height="50" rx="6" fill="#3fb950" fill-opacity="0.1" stroke="#3fb950" stroke-width="1"/>
+      <rect x="0" y="0" width="4" height="50" fill="#3fb950"/>
+      <text x="15" y="20" fill="#3fb950" font-size="12" font-weight="600">💡 Tip</text>
+      <text x="15" y="38" fill="#e6edf3" font-size="12">Utilize o menu lateral retrátil e redimensione com o mouse para focar na leitura.</text>
+    </g>
+
+    <!-- Code Block with Chroma + Copy Button -->
+    <g transform="translate(0, 180)">
+      <rect x="0" y="0" width="650" height="85" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+      <!-- Copy button -->
+      <rect x="585" y="8" width="55" height="20" rx="3" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+      <text x="597" y="22" fill="#8b949e" font-size="10">Copiar</text>
+      
+      <!-- Code lines -->
+      <text x="15" y="25" fill="#ff7b72" font-size="12" font-family="monospace">package <tspan fill="#e6edf3">main</tspan></text>
+      <text x="15" y="45" fill="#ff7b72" font-size="12" font-family="monospace">func <tspan fill="#d2a8ff">ServeDocumentation</tspan><tspan fill="#e6edf3">(addr string) error {</tspan></text>
+      <text x="15" y="65" fill="#e6edf3" font-size="12" font-family="monospace">    <tspan fill="#79c0ff">return</tspan> server.<tspan fill="#d2a8ff">StartOnPort</tspan>(8080)</text>
+    </g>
+
+    <!-- Mermaid Diagram Showcase -->
+    <g transform="translate(0, 280)">
+      <rect x="0" y="0" width="650" height="110" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+      <text x="15" y="20" fill="#8b949e" font-size="11" font-weight="600">DIAGRAMA MERMAID RENDERIZADO</text>
+      
+      <!-- Mermaid nodes -->
+      <rect x="40" y="45" width="120" height="40" rx="6" fill="#1f6feb" fill-opacity="0.3" stroke="#58a6ff" stroke-width="1.5"/>
+      <text x="65" y="70" fill="#e6edf3" font-size="12" font-weight="500">Cliente Web</text>
+
+      <line x1="160" y1="65" x2="250" y2="65" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="180" y="58" fill="#8b949e" font-size="10">HTTP GET</text>
+
+      <rect x="250" y="45" width="130" height="40" rx="6" fill="#238636" fill-opacity="0.3" stroke="#3fb950" stroke-width="1.5"/>
+      <text x="270" y="70" fill="#e6edf3" font-size="12" font-weight="500">md_server Go</text>
+
+      <line x1="380" y1="65" x2="470" y2="65" stroke="#3fb950" stroke-width="1.5"/>
+      <text x="400" y="58" fill="#8b949e" font-size="10">Goldmark</text>
+
+      <rect x="470" y="45" width="130" height="40" rx="6" fill="#8957e5" fill-opacity="0.3" stroke="#a371f7" stroke-width="1.5"/>
+      <text x="490" y="70" fill="#e6edf3" font-size="12" font-weight="500">HTML + SVG</text>
+    </g>
+
+    <!-- Math KaTeX & Footnotes info -->
+    <g transform="translate(0, 405)">
+      <text x="0" y="18" fill="#8b949e" font-size="12">Fórmula KaTeX: <tspan fill="#e6edf3" font-family="serif" font-style="italic">E = mc²</tspan> | Notas GFM: <tspan fill="#58a6ff">[¹]</tspan> | Tipografia: <tspan fill="#e6edf3">Nexus Core — v2.0</tspan></text>
+    </g>
+  </g>
+</svg>

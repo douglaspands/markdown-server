@@ -1,10 +1,4 @@
-# Especificação de Requisitos e Cenários BDD: Fundação do md_server (Markdown Viewer)
-
-## Purpose
-
-Fornece um servidor web local e ferramenta de linha de comando (CLI) multiplataforma (Windows e Linux/AMD64) para renderização instantânea de diretórios com arquivos Markdown sob a identidade visual "Markdown Viewer", com ícone vetorial moderno e favicon, suporte a diagramas Mermaid interativos com Zoom e Pan, extensões avançadas (GitHub Alerts, Footnotes, KaTeX Math, Listas de Definição, Tipografia Inteligente, botão de cópia de código), destaque de sintaxe Chroma com stack tipográfica recomendada, navegação fluida por links internos, menu lateral retrátil full-height (100vh) com divisor arrastável de redimensionamento manual, interface responsiva adaptando o título para "MD Viewer" no smartphone, compartilhamento seguro via QR Code ISO/IEC 18004 calibrado e flag `--lan`, e inicialização facilitada por duplo clique com abertura automática do navegador.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Servir e renderizar documentos Markdown locais com interface minimalista (Markdown Viewer)
 O sistema SHALL processar arquivos Markdown no diretório raiz fornecido, convertê-los em HTML semântico com suporte a GitHub Flavored Markdown (GFM), GitHub Alerts (Admonitions), Notas de Rodapé (Footnotes), Fórmulas Matemáticas LaTeX, Listas de Definição, Tipografia Inteligente e botão de cópia de código, exibindo-os em uma interface web minimalista inspirada no md-reader sob a marca "Markdown Viewer", com ícone vetorial exclusivo, favicon na aba do navegador, alternância de temas (Dark/Light Mode), menu lateral retrátil full-height e divisor maleável de redimensionamento manual (*resizable sidebar splitter*) com persistência de largura no navegador.
@@ -78,16 +72,6 @@ O sistema SHALL processar arquivos Markdown no diretório raiz fornecido, conver
 - **GIVEN** que a aplicação possui interface gráfica minimalista e plugins avançados de renderização
 - **WHEN** o usuário ou desenvolvedor lê o `README.md` no repositório
 - **THEN** o documento SHALL exibir capturas de tela e mockups visuais ilustrativos com dados fictícios apresentando o visualizador em funcionamento, demonstrando o divisor de redimensionamento, os alertas do GitHub, diagramas Mermaid e o modal de QR Code.
-
----
-
-### Requirement: Responsividade e compatibilidade total com smartphones e tablets
-O sistema DEVE adaptar sua interface dinamicamente para dispositivos móveis com telas de toque, transformando a navegação em uma experiência fluida de gaveta (drawer) e otimizando a densidade de leitura.
-
-#### Scenario: Acesso à aplicação a partir de smartphone ou tablet
-- **GIVEN** que o usuário acessa a aplicação através de um navegador móvel (largura de tela inferior a 768px)
-- **WHEN** a página carrega
-- **THEN** a barra lateral SHALL iniciar oculta em formato de gaveta deslizante (*drawer*), permitindo que o usuário abra o menu tocando no botão do cabeçalho e feche ao selecionar um documento ou tocar no fundo com overlay.
 
 ---
 
@@ -191,21 +175,6 @@ O sistema SHALL adaptar dinamicamente o cabeçalho e os títulos da interface em
 
 ---
 
-### Requirement: Navegação fluida por links internos e árvore lateral de arquivos
-O sistema DEVE permitir a navegação contínua entre arquivos Markdown locais através de cliques em links relativos e pela árvore de diretórios exibida na barra lateral (*Sidebar Tree*).
-
-#### Scenario: Clique em link relativo apontando para outro arquivo Markdown
-- **GIVEN** que o documento em exibição possui um link Markdown relativo `[Guia de Instalação](./instalacao.md)`
-- **WHEN** o usuário clica no link na interface web
-- **THEN** o sistema SHALL redirecionar para a rota correspondente e carregar o arquivo `instalacao.md` renderizado sem perda de contexto ou erro de rota.
-
-#### Scenario: Navegação e ancoragem interna na mesma página
-- **GIVEN** que o documento possui links de âncora para títulos internos (ex: `[Ir para Requisitos](#requisitos)`)
-- **WHEN** o usuário clica na âncora
-- **THEN** o navegador SHALL rolar suavemente até a seção correspondente sem recarregar a página.
-
----
-
 ### Requirement: Inicialização por Duplo Clique no Windows e CLI Multiplataforma
 O sistema SHALL suportar execução por duplo clique em ambientes Windows sem requisições de argumentos mantendo escuta local segura por padrão (`127.0.0.1`), e fornecer uma interface de linha de comando completa para Windows e Linux/AMD64 com suporte a parâmetros (`--dir`, `--port`, `--open`, `--lan`).
 
@@ -228,22 +197,3 @@ O sistema SHALL suportar execução por duplo clique em ambientes Windows sem re
 - **GIVEN** que o binário foi compilado com metadados de versão via ldflags
 - **WHEN** o usuário executa `md_server version` ou `md_server --version`
 - **THEN** o sistema SHALL exibir a versão semântica oficial (ou `dev`), o hash do commit e a data de compilação no formato padronizado.
-
-### Requirement: Serviço de Domínio de Referência e Endpoint de Saúde (Health Check)
-O sistema DEVE fornecer um serviço de domínio desacoplado para verificação de integridade operacional exposto em endpoint HTTP REST.
-
-#### Scenario: Consulta de saúde operacional da aplicação
-- **GIVEN** que o servidor `md_server` está em execução
-- **WHEN** um cliente HTTP realiza uma requisição `GET /api/health`
-- **THEN** o sistema SHALL responder com status HTTP 200 OK e corpo JSON contendo `{"status": "UP", "version": "<versao>", "uptime": "<tempo_ativo>"}`.
-
----
-
-### Requirement: Encerramento Gracioso do Servidor (Graceful Shutdown)
-O sistema DEVE capturar sinais do sistema operacional e encerrar suas atividades de forma graciosa sem abortar conexões pendentes.
-
-#### Scenario: Recebimento de sinal de encerramento do sistema
-- **GIVEN** que o servidor HTTP possui conexões ativas em processamento
-- **WHEN** o processo recebe um sinal `SIGINT` (Ctrl+C) ou `SIGTERM`
-- **THEN** o sistema SHALL parar de aceitar novas requisições, concluir as requisições em trânsito dentro do tempo limite de tolerância (timeout de 5 segundos), liberar a porta de rede e finalizar o processo com código de saída 0.
-
