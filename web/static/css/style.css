@@ -88,6 +88,14 @@ html, body {
   letter-spacing: -0.01em;
 }
 
+.brand-short {
+  display: none;
+}
+
+.brand-full {
+  display: inline;
+}
+
 .brand-logo {
   display: block;
 }
@@ -911,6 +919,20 @@ dd {
 
 /* Responsividade: Mobile e Tablet */
 @media (max-width: 768px) {
+  .brand-full {
+    display: none;
+  }
+
+  .brand-short {
+    display: inline;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .header-brand {
+    gap: 0.45rem;
+  }
+
   .btn-text {
     display: none;
   }

@@ -71,6 +71,6 @@
 
 ## 13. Adaptação Responsiva do Título para Dispositivos Móveis ("MD Viewer")
 
-- [ ] 13.1 Atualizar template `web/templates/base.html` com elementos `.brand-full` ("Markdown Viewer") e `.brand-short` ("MD Viewer")
-- [ ] 13.2 Implementar regras CSS responsivas em `web/static/css/style.css` para alternância suave de visualização em `@media (max-width: 768px)`
-- [ ] 13.3 Validar a renderização com `make check` e `make test`
+- [x] 13.1 Atualizar template `web/templates/base.html` com elementos `.brand-full` ("Markdown Viewer") e `.brand-short` ("MD Viewer")
+- [x] 13.2 Implementar regras CSS responsivas em `web/static/css/style.css` para alternância suave de visualização em `@media (max-width: 768px)`
+- [x] 13.3 Validar a renderização com `make check` e `make test`
